@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property integer $createTime
  *
  * @property Account $account
+ * @property string $accountName
  */
 class PayRequest extends \yii\db\ActiveRecord
 {
@@ -72,12 +73,13 @@ class PayRequest extends \yii\db\ActiveRecord
             'id' => 'ID',
             'userId' => 'User ID',
             'accountId' => 'Account ID',
-            'amount' => 'Amount',
-            'bankTrackingCode' => 'Bank Tracking Code',
-            'status' => 'Status',
-            'payTime' => 'Pay Time',
+            'accountName' => 'حساب',
+            'amount' => 'مبلغ',
+            'bankTrackingCode' => 'کدپیگیری تراکنش',
+            'status' => 'وضعیت',
+            'payTime' => 'زمان تراکنش',
             'updateTime' => 'Update Time',
-            'createTime' => 'Create Time',
+            'createTime' => 'زمان درخواست',
         ];
     }
 
@@ -87,5 +89,14 @@ class PayRequest extends \yii\db\ActiveRecord
     public function getAccount()
     {
         return $this->hasOne(Account::className(), ['id' => 'accountId']);
+    }
+
+    /**
+     * Return account name
+     * @return string
+     */
+    public function getAccountName(){
+        $account = $this->account;
+        return $account->bankName.'-'.$account->cardNumber;
     }
 }

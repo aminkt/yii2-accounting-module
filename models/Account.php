@@ -63,6 +63,7 @@ class Account extends ActiveRecord
             [['userId', 'status', 'bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['amountPaid'], 'number'],
+            [['amountPaid'], 'default', 'value'=>0],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
         ];
     }
@@ -75,13 +76,13 @@ class Account extends ActiveRecord
         return [
             'id' => 'ID',
             'userId' => 'User ID',
-            'bankName' => 'Bank Name',
-            'cardNumber' => 'Card Number',
-            'accountNumber' => 'Account Number',
-            'shaba' => 'Shaba',
-            'owner' => 'Owner',
-            'amountPaid' => 'Amount Paid',
-            'status' => 'Status',
+            'bankName' => 'نام بانک',
+            'cardNumber' => 'شماره کارت',
+            'accountNumber' => 'شماره حساب',
+            'shaba' => 'شبا',
+            'owner' => 'صاحب حساب',
+            'amountPaid' => 'مبلغ واریز شده (تومان)',
+            'status' => 'وضعیت',
             'updateTime' => 'Update Time',
             'createTime' => 'Create Time',
         ];

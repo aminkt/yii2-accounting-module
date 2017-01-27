@@ -70,10 +70,10 @@ class Transaction extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'userId' => 'User ID',
-            'amount' => 'Amount',
-            'description' => 'Description',
-            'type' => 'Type',
-            'time' => 'Time',
+            'amount' => 'مبلغ (تومان)',
+            'description' => 'توضیحات',
+            'type' => 'نوع تراکنش',
+            'time' => 'زمان تراکنش',
         ];
     }
 }

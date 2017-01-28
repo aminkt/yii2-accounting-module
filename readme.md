@@ -2,8 +2,8 @@ How to install this module:
 
 Step1: First clone `userAccounting` in your module folder
 ```
-cd userAccounting
-git clone https://gitlab.com/aminkt/yii2-userAccounting-module.git
+cd modules_folder
+git clone https://gitlab.com/aminkt/yii2-userAccounting-module.git userAccounting
 ```
 
 Step2: Add flowing code into your `bootstrap.php` file in your project.

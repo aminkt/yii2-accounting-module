@@ -1,6 +1,12 @@
 How to install this module:
 
-Step1: Copy `userAccounting` directory in your modules folder.
+Step1: First clone `userAccounting` in your module folder
+```
+cd userAccounting
+git remote add origin git@gitlab.com:aminkt/yii2-userAccounting-module.git
+git push -u origin --all
+git push -u origin --tags
+```
 
 Step2: Add flowing code into your `bootstrap.php` file in your project.
 ```

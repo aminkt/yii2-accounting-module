@@ -70,8 +70,11 @@ class Account extends Component
             'userId'=>$userId,
             'type'=>UserAccounting::TYPE_BALANCE
         ]);
-        if(!$account)
-            throw new NotFoundHttpException("متاسفانه حساب مورد نظر پیدا نشد.");
+        if(!$account){
+            self::initializeNewAccount($userId);
+            self::withdrawal($amount, $type, $description, $userId);
+//            throw new NotFoundHttpException("متاسفانه حساب مورد نظر پیدا نشد.");
+        }
 
 
         $transaction = new Transaction();
@@ -111,8 +114,11 @@ class Account extends Component
             'userId'=>$userId,
             'type'=>UserAccounting::TYPE_BALANCE
         ]);
-        if(!$account)
-            throw new NotFoundHttpException("متاسفانه حساب مورد نظر پیدا نشد.");
+        if(!$account){
+            self::initializeNewAccount($userId);
+            self::withdrawal($amount, $type, $description, $userId);
+//            throw new NotFoundHttpException("متاسفانه حساب مورد نظر پیدا نشد.");
+        }
 
 
         $transaction = new Transaction();

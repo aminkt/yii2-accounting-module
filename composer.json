@@ -1,4 +1,3 @@
-
 {
 	"name": "aminkt/yii2-userAccounting-module",
 	"description": "User accounting module for  yii2",
@@ -15,7 +14,7 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"userAccounting": ""
+			"userAccounting\\": ""
 		}
 	},
 	"extra": {

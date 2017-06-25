@@ -1,17 +1,27 @@
 How to install this module:
 
-Step1: First clone `userAccounting` in your module folder
+Step1: First add flowing codes into project `composer.json`
+
 ```
-cd modules_folder
-git clone https://gitlab.com/aminkt/yii2-userAccounting-module.git userAccounting
+"repositories": [
+    {
+        "type": "gitlab",
+        "url": "https://gitlab.com/aminkt/yii2-userAccounting-module"
+    }
+],
 ```
 
-Step2: Add flowing code into your `bootstrap.php` file in your project.
+Then add flowing line to require part of `composer.json` :
 ```
-Yii::setAlias('userAccounting', 'PATH_TO_MODULE_DIRECTORY/userAccounting');
+"aminkt/yii2-userAccounting-module": "*",
 ```
 
-Step3: Add flowing lines in your application admin config:
+And after that run bellow command in your composer :
+```
+Composer update aminkt/yii2-userAccounting-module
+```
+
+Step2: Add flowing lines in your application admin config:
 
 ```
 'userAccounting' => [
@@ -20,7 +30,7 @@ Step3: Add flowing lines in your application admin config:
 ],
 ```
 
-Step4: Add flowing lines in your application frontend config:
+Step3: Add flowing lines in your application frontend config:
 
 ```
 'userAccounting' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace userAccounting\models;
+namespace aminkt\userAccounting\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;

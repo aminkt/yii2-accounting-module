@@ -1,6 +1,6 @@
 <?php
 
-namespace userAccounting\models;
+namespace aminkt\userAccounting\models;
 
 use userAccounting\components\Account;
 use Yii;

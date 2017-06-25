@@ -1,6 +1,6 @@
 <?php
 
-namespace userAccounting;
+namespace aminkt\userAccounting;
 use userAccounting\controllers\panel\DefaultController;
 
 /**

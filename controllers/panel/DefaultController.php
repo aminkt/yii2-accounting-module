@@ -1,13 +1,13 @@
 <?php
 
-namespace userAccounting\controllers\panel;
+namespace aminkt\userAccounting\controllers\panel;
 
 
+use aminkt\userAccounting\models\Account;
+use aminkt\userAccounting\models\PayRequest;
+use aminkt\userAccounting\models\PayRequestForm;
+use aminkt\userAccounting\models\Transaction;
 use common\widgets\alert\Alert;
-use userAccounting\models\Account;
-use userAccounting\models\PayRequest;
-use userAccounting\models\PayRequestForm;
-use userAccounting\models\Transaction;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 

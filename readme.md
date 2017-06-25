@@ -25,7 +25,7 @@ Step2: Add flowing lines in your application admin config:
 
 ```
 'userAccounting' => [
-    'class' => 'userAccounting\UserAccounting',
+    'class' => 'aminkt\userAccounting\UserAccounting',
     'controllerNamespace' => 'userAccounting\controllers\admin',
 ],
 ```
@@ -34,7 +34,7 @@ Step3: Add flowing lines in your application frontend config:
 
 ```
 'userAccounting' => [
-    'class' => 'userAccounting\UserAccounting',
+    'class' => 'aminkt\userAccounting\UserAccounting',
     'controllerNamespace' => 'userAccounting\controllers\panel',
 ],
 ```

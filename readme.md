@@ -21,24 +21,33 @@ And after that run bellow command in your composer :
 Composer update aminkt/yii2-userAccounting-module
 ```
 
-Step2: Add flowing lines in your application admin config:
+Step2: Add flowing lines in your application admin config in module part:
 
 ```
 'userAccounting' => [
-    'class' => 'aminkt\userAccounting\UserAccounting',
-    'controllerNamespace' => 'userAccounting\controllers\admin',
+    'class' => \aminkt\userAccounting\UserAccounting::className(),
+    'controllerNamespace' => \aminkt\userAccounting\UserAccounting::ADMIN_CONTROLLER_NAMESPACE,
 ],
 ```
 
-Step3: Add flowing lines in your application frontend config:
+Step3: Add flowing lines in your application frontend config in module part:
 
 ```
 'userAccounting' => [
-    'class' => 'aminkt\userAccounting\UserAccounting',
-    'controllerNamespace' => 'userAccounting\controllers\panel',
+    'class' => \aminkt\userAccounting\UserAccounting::className(),
+    'controllerNamespace' => \aminkt\userAccounting\UserAccounting::PANEL_CONTROLLER_NAMESPACE,
 ],
 ```
+---
+**Database Migrations**
 
+Before usage this extension, we'll also need to prepare the database.
 
+```
+php yii migrate --migrationPath=@vendor/aminkt/yii2-userAccounting-module/migrations
+```
+
+---
 Structure of tables and classes:
+---
 ![alt text](structure.png)

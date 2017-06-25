@@ -1,17 +1,20 @@
 <?php
 
 namespace aminkt\userAccounting;
-use userAccounting\controllers\panel\DefaultController;
+use aminkt\userAccounting\controllers\panel\DefaultController;
 
 /**
  * userAccounting module definition class
  */
 class UserAccounting extends \yii\base\Module
 {
+    const ADMIN_CONTROLLER_NAMESPACE = 'aminkt\userAccounting\controllers\admin';
+    const PANEL_CONTROLLER_NAMESPACE = 'aminkt\userAccounting\controllers\panel';
+
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'userAccounting\controllers\panel';
+    public $controllerNamespace = 'aminkt\userAccounting\controllers\panel';
 
     /**
      * @inheritdoc

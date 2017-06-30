@@ -2,6 +2,7 @@
 
 namespace aminkt\userAccounting\models;
 
+use userAccounting\components\Account;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -11,6 +12,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $userId
  * @property double $amount
+ * @property double $remains
  * @property string $description
  * @property integer $type
  * @property integer $time
@@ -75,5 +77,18 @@ class Transaction extends \yii\db\ActiveRecord
             'type' => 'نوع تراکنش',
             'time' => 'زمان تراکنش',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if($insert){
+            // Save new Transaction
+            $balance = Account::getAccountAmount(UserAccounting::TYPE_BALANCE, $this->userId);
+            $this->remains = $balance + $this->amount;
+        }else{
+            // Update Transaction
+
+        }
+        return parent::beforeSave($insert);
     }
 }

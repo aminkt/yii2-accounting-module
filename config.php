@@ -2,7 +2,7 @@
 return [
     'components' => [
         'account'=>[
-            'class'=>\userAccounting\components\Account::className()
+            'class'=>\aminkt\userAccounting\components\Account::className()
         ]
     ],
     'params' => [

@@ -49,6 +49,7 @@ class m170110_111551_init extends Migration
             'id'=>$this->primaryKey(),
             'userId'=>$this->integer(),
             'amount'=>$this->double()->defaultValue(0),
+            'remains'=>$this->double()->defaultValue(0),
             'description'=>$this->text(),
             'type'=>$this->smallInteger(2),
             'time'=>$this->integer(20),

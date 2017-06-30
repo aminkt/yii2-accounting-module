@@ -1,9 +1,9 @@
 <?php
-namespace userAccounting\components;
+namespace aminkt\userAccounting\components;
 
 
-use userAccounting\models\Transaction;
-use userAccounting\models\UserAccounting;
+use aminkt\userAccounting\models\Transaction;
+use aminkt\userAccounting\models\UserAccounting;
 use yii\base\Component;
 use yii\web\NotFoundHttpException;
 
@@ -52,6 +52,8 @@ class Account extends Component
         $account->amount = 0;
         $account->type = UserAccounting::TYPE_INCOME;
         $account->save(false);
+
+        return true;
     }
 
     /**
@@ -72,7 +74,7 @@ class Account extends Component
         ]);
         if(!$account){
             self::initializeNewAccount($userId);
-            self::withdrawal($amount, $type, $description, $userId);
+            return self::deposit($amount, $type, $description, $userId);
 //            throw new NotFoundHttpException("متاسفانه حساب مورد نظر پیدا نشد.");
         }
 
@@ -116,7 +118,7 @@ class Account extends Component
         ]);
         if(!$account){
             self::initializeNewAccount($userId);
-            self::withdrawal($amount, $type, $description, $userId);
+            return self::withdrawal($amount, $type, $description, $userId);
 //            throw new NotFoundHttpException("متاسفانه حساب مورد نظر پیدا نشد.");
         }
 

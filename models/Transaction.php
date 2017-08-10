@@ -48,7 +48,7 @@ class Transaction extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%useraccounting_transactions}}';
+        return '{{%user_accounting_transactions}}';
     }
 
     /**

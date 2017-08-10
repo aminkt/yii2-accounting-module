@@ -32,7 +32,7 @@ class PayRequest extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%useraccounting_pay_requests}}';
+        return '{{%user_accounting_pay_requests}}';
     }
 
     public function behaviors()

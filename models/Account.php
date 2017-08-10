@@ -36,7 +36,7 @@ class Account extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%useraccounting_accounts}}';
+        return '{{%user_accounting_accounts}}';
     }
 
     public function behaviors()

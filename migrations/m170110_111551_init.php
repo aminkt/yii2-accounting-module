@@ -8,7 +8,7 @@ class m170110_111551_init extends Migration
     // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()
     {
-        $this->createTable("{{%userAccounting_accounts}}",[
+        $this->createTable("{{%user_accounting_accounts}}",[
             'id'=>$this->primaryKey(),
             'userId'=>$this->integer(),
             'bankName'=>$this->string(),
@@ -22,7 +22,7 @@ class m170110_111551_init extends Migration
             'createTime'=>$this->integer(20),
         ]);
 
-        $this->createTable("{{%userAccounting_pay_requests}}",[
+        $this->createTable("{{%user_accounting_pay_requests}}",[
             'id'=>$this->primaryKey(),
             'userId'=>$this->integer(),
             'accountId'=>$this->integer(),
@@ -36,16 +36,16 @@ class m170110_111551_init extends Migration
 
         // add foreign key for table `catalog` and `catalog`
         $this->addForeignKey(
-            'fk-userAccounting_pay_requests-accountId',
-            '{{%userAccounting_pay_requests}}',
+            'fk-user_accounting_pay_requests-accountId',
+            '{{%user_accounting_pay_requests}}',
             'accountId',
-            '{{%userAccounting_accounts}}',
+            '{{%user_accounting_accounts}}',
             'id',
             'SET NULL',
             'CASCADE'
         );
 
-        $this->createTable("{{%userAccounting_transactions}}",[
+        $this->createTable("{{%user_accounting_transactions}}",[
             'id'=>$this->primaryKey(),
             'userId'=>$this->integer(),
             'amount'=>$this->double()->defaultValue(0),
@@ -55,14 +55,14 @@ class m170110_111551_init extends Migration
             'time'=>$this->integer(20),
         ]);
 
-        $this->createTable("{{%userAccounting}}",[
+        $this->createTable("{{%user_accounting}}",[
             'userId'=>$this->integer(),
             'type'=>$this->smallInteger(2),
             'amount'=>$this->double()->defaultValue(0),
         ]);
         $this->addPrimaryKey(
-            'pk-userAccounting',
-            '{{%userAccounting}}',
+            'pk-user_accounting',
+            '{{%user_accounting}}',
             [
                 'userId',
                 'type',
@@ -73,14 +73,14 @@ class m170110_111551_init extends Migration
 
     public function safeDown()
     {
-        $this->dropForeignKey('fk-userAccounting_pay_requests-accountId', '{{%userAccounting_pay_requests}}');
+        $this->dropForeignKey('fk-user_accounting_pay_requests-accountId', '{{%user_accounting_pay_requests}}');
 
-        $this->dropPrimaryKey('fk-userAccounting-accountId', '{{%userAccounting}}');
+        $this->dropPrimaryKey('fk-user_accounting-accountId', '{{%user_accounting}}');
 
-        $this->dropTable('{{%userAccounting}}');
-        $this->dropTable('{{%userAccounting_transactions}}');
-        $this->dropTable('{{%userAccounting_pay_requests}}');
-        $this->dropTable('{{%userAccounting_accounts}}');
+        $this->dropTable('{{%user_accounting}}');
+        $this->dropTable('{{%user_accounting_transactions}}');
+        $this->dropTable('{{%user_accounting_pay_requests}}');
+        $this->dropTable('{{%user_accounting_accounts}}');
     }
 
 }

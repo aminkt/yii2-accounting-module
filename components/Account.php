@@ -5,6 +5,7 @@ namespace aminkt\userAccounting\components;
 use aminkt\userAccounting\models\Transaction;
 use aminkt\userAccounting\models\UserAccounting;
 use yii\base\Component;
+use yii\base\InvalidParamException;
 use yii\web\NotFoundHttpException;
 
 class Account extends Component
@@ -29,6 +30,11 @@ class Account extends Component
         return 0;
     }
 
+    /**
+     * Initialize accounting system for a user.
+     * @param integer   $userId     User id.
+     * @return bool
+     */
     public static function initializeNewAccount($userId){
         $account = UserAccounting::find()->where(['userId'=>$userId])->all();
         if($account){
@@ -141,4 +147,24 @@ class Account extends Component
 
         return false;
     }
+
+    /**
+     * Migrate all account data to another user.
+     * @param integer   $fromUserId     The user id that we want migrate from that.
+     * @param integer   $toUserId       The user id that we want migrate ti that.
+     */
+    public static function migrateAccount($fromUserId, $toUserId){
+        $fromAccount = UserAccounting::find()->where(['userId'=>$fromUserId])->all();
+        $toAccount = UserAccounting::find()->where(['userId'=>$toUserId])->all();
+        if(!$toAccount){
+            throw new InvalidParamException("To user account not initilized yet.");
+        }
+        if(!$fromAccount){
+            return true;
+        }
+
+
+
+    }
+
 }

@@ -2,11 +2,13 @@
 
 namespace aminkt\userAccounting\models;
 
+use aminkt\userAccounting\exceptions\RuntimeException;
+use aminkt\userAccounting\interfaces\AccountInterface;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%useraccounting_accounts}}".
+ * This is the model class for table "{{%user_accounting_accounts}}".
  *
  * @property integer $id
  * @property integer $userId
@@ -17,20 +19,14 @@ use yii\db\ActiveRecord;
  * @property string $owner
  * @property double $amountPaid
  * @property integer $status
+ * @property string $operatorNote
  * @property integer $updateTime
  * @property integer $createTime
  *
- * @property PayRequest[] $payRequests
+ * @property Settlement[] $settlements
  */
-class Account extends ActiveRecord
+class Account extends ActiveRecord implements AccountInterface
 {
-    const STATUS_WAITING = 1;
-    const STATUS_CONFIRMED = 2;
-    const STATUS_REJECTED = 3;
-    const STATUS_BLOCKED = 4;
-    const STATUS_DEACTIVATE = 5;
-
-
     /**
      * @inheritdoc
      */
@@ -62,6 +58,7 @@ class Account extends ActiveRecord
         return [
             [['userId', 'status', 'bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
+            [['operatorNote'], 'string'],
             [['amountPaid'], 'number'],
             [['amountPaid'], 'default', 'value'=>0],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
@@ -91,8 +88,66 @@ class Account extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPayRequests()
+    public function getSettlements()
     {
-        return $this->hasMany(PayRequest::className(), ['accountId' => 'id']);
+        return $this->hasMany(Settlement::className(), ['accountId' => 'id']);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function createAccount($userIdentity, $bankName = null, $owner = null, $cardNumber = null, $shaba = null, $accountNumber = null)
+    {
+        $account = new static();
+        $account->userId = $userIdentity->getId();
+        $account->bankName = $bankName;
+        $account->owner = $owner;
+        $account->cardNumber = $cardNumber;
+        $account->shaba = $shaba;
+        $account->accountNumber = $accountNumber;
+        $account->status = self::STATUS_WAITING;
+        if ($account->save())
+            return $account;
+
+        \Yii::error($account->getErrors(), self::class);
+        throw new RuntimeException("Account model creation become failed");
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function confirmAccount($note = null)
+    {
+        $this->operatorNote = $note;
+        $this->status = self::STATUS_CONFIRMED;
+        if (!$this->save()) {
+            \Yii::error($this->getErrors(), self::class);
+            throw new RuntimeException("Account confirmation become failed");
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function blockAccount($note = null)
+    {
+        $this->operatorNote = $note;
+        $this->status = self::STATUS_BLOCKED;
+        if (!$this->save()) {
+            \Yii::error($this->getErrors(), self::class);
+            throw new RuntimeException("Account blocking become failed");
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeAccount()
+    {
+        $this->status = self::STATUS_REMOVED;
+        if (!$this->save()) {
+            \Yii::error($this->getErrors(), self::class);
+            throw new RuntimeException("Account removing become failed");
+        }
     }
 }

@@ -12,6 +12,9 @@
 			"email": "ak_1596@yahoo.com"
 		}
 	],
+  "require": {
+    "php": ">=7"
+  },
 	"autoload": {
 		"psr-4": {
 			"aminkt\\userAccounting\\": ""

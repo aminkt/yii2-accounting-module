@@ -41,11 +41,11 @@ class PayRequestForm extends Model
 
     public function regPayRequest(){
         if($this->validate()){
-            $payRequest = new PayRequest();
+            $payRequest = new Settlement();
             $payRequest->amount = $this->amount;
             $payRequest->accountId = $this->account;
             $payRequest->userId = Yii::$app->getUser()->getId();
-            $payRequest->status = PayRequest::STATUS_WAITING;
+            $payRequest->status = Settlement::STATUS_WAITING;
             if($payRequest->save()){
                 Account::withdrawal($this->amount, Transaction::TYPE_PAY_REQUEST, 'درخواست تسویه حساب');
                 return true;

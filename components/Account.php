@@ -1,7 +1,6 @@
 <?php
 namespace aminkt\userAccounting\components;
 
-
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\models\Purse;
 use aminkt\userAccounting\models\Settlement;
@@ -12,6 +11,12 @@ use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
+/**
+ * Class Account
+ * @author Amin Keshavarz <ak_1596@yahoo.com> 20/8/2017
+ *
+ * @package aminkt\userAccounting\components
+ */
 class Account extends Component
 {
     /**
@@ -130,12 +135,18 @@ class Account extends Component
     /**
      * Initialize accounting system for a user.
      *
-     * @param integer   $userId     User id.
+     * @param null|integer|\yii\web\IdentityInterface $user
+     * @param string $purseName
+     * @param string $purseDescription
      *
      * @return bool
      */
-    public static function initializeNewAccount($userId){
-
+    public static function initializeNewAccount($user, $purseName = 'Default', $purseDescription = 'Default purse of user.')
+    {
+        $purse = UserAccounting::createPurse($user, $purseName, $purseDescription);
+        if ($purse)
+            return true;
+        return false;
     }
 
     /**
@@ -165,4 +176,20 @@ class Account extends Component
         return $rowsAffected;
     }
 
+    /**
+     * Magic method to process any dynamic method calls.
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        if (method_exists($this, $method)) {
+            return call_user_func_array([$this, $method], $arguments);
+        } else {
+            return call_user_func_array([UserAccounting::className(), $method], $arguments);
+        }
+    }
 }

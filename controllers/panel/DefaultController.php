@@ -5,7 +5,7 @@ namespace aminkt\userAccounting\controllers\panel;
 
 use aminkt\userAccounting\models\Account;
 use aminkt\userAccounting\models\Settlement;
-use aminkt\userAccounting\models\PayRequestForm;
+use aminkt\userAccounting\models\SettlementRequestForm;
 use aminkt\userAccounting\models\Transaction;
 use common\widgets\alert\Alert;
 use yii\data\ActiveDataProvider;
@@ -56,7 +56,7 @@ class DefaultController extends Controller
      * Pay request from user to settle account.
      */
     public function actionPayRequest(){
-        $model = new PayRequestForm();
+        $model = new SettlementRequestForm();
 
         $dataProvider = new ActiveDataProvider([
             'query' => Settlement::find()->andWhere([

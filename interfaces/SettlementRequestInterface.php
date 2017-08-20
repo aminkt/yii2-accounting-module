@@ -1,0 +1,76 @@
+<?php
+
+namespace aminkt\userAccounting\interfaces;
+
+/**
+ * Interface SettlementRequestInterface
+ * @author Amin Keshavarz <Ak_1596@yahoo.com)
+ * @package aminkt\userAccounting\interfaces
+ */
+interface SettlementRequestInterface
+{
+    /** Settlement type */
+    const TYPE_CART_TO_CART = 1;
+    /** Settlement type */
+    const TYPE_SHABA = 2;
+
+    /** Settlement request status */
+    const STATUS_WAITING = 1;
+    /** Settlement request status */
+    const STATUS_CONFIRMED = 2;
+    /** Settlement request status */
+    const STATUS_REJECTTED = 3;
+    /** Settlement request status */
+    const STATUS_BLOCKED = 4;
+    /** Settlement request status */
+    const STATUS_REMOVED = 5;
+
+    /**
+     * Create a settlement request from selected purse to selected account.
+     *
+     * @param float $amount
+     * @param PurseInterface $purse
+     * @param AccountInterface $account
+     * @param string|null $description
+     * @param int $type
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     *
+     * @return SettlementRequestInterface
+     */
+    public static function createSettlementRequest($amount, $purse, $account, $description = null, $type = self::TYPE_SHABA);
+
+    /**
+     * Block a settlement request.
+     *
+     * @param string|null $note
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     *
+     * @return void
+     */
+    public function blockSettlementRequest($note = null);
+
+    /**
+     * Confirm a settlment request.
+     *
+     * @param string $bankTrackingCode Bank trakcing code for loging.
+     * @param string|null $note
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     *
+     * @return void
+     */
+    public function confirmSettlementRequest($bankTrackingCode, $note = null);
+
+    /**
+     * Reject a settlement request.
+     *
+     * @param string|null $note
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     *
+     * @return void
+     */
+    public function rejectSettlementRequest($note = null);
+}

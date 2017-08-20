@@ -13,6 +13,7 @@ class PayRequestForm extends Model
 {
     public $amount;
     public $account;
+    public $purse;
 
     /**
      * @inheritdoc
@@ -21,9 +22,9 @@ class PayRequestForm extends Model
     {
         return [
             // username and password are both required
-            [['amount', 'account'], 'required'],
+            [['amount', 'account',], 'required'],
             [['amount'], 'number', 'min'=>10000],
-            [['account'], 'integer'],
+            [['account', 'purse'], 'integer'],
         ];
     }
 
@@ -35,10 +36,17 @@ class PayRequestForm extends Model
         return [
             'amount' => 'مبلغ (تومان)',
             'account' => 'حساب',
+            'purse' => 'کیف پول',
         ];
     }
 
 
+    /**
+     * Create a settlement request. request.
+     *
+     * @deprecated Since ver 1.0 you should use `Settlement()` instead this method. available until version 3.
+     * @return bool
+     */
     public function regPayRequest(){
         if($this->validate()){
             $payRequest = new Settlement();

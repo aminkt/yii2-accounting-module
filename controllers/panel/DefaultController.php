@@ -4,7 +4,7 @@ namespace aminkt\userAccounting\controllers\panel;
 
 
 use aminkt\userAccounting\models\Account;
-use aminkt\userAccounting\models\PayRequest;
+use aminkt\userAccounting\models\Settlement;
 use aminkt\userAccounting\models\PayRequestForm;
 use aminkt\userAccounting\models\Transaction;
 use common\widgets\alert\Alert;
@@ -59,7 +59,7 @@ class DefaultController extends Controller
         $model = new PayRequestForm();
 
         $dataProvider = new ActiveDataProvider([
-            'query'=>PayRequest::find()->andWhere([
+            'query' => Settlement::find()->andWhere([
                 'userId'=>\Yii::$app->getUser()->getId(),
             ])
         ]);

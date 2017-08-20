@@ -117,17 +117,7 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
     }
 
     /**
-     * Create a settlement request from selected purse to selected account.
-     *
-     * @param float $amount
-     * @param Purse $purse
-     * @param Account $account
-     * @param string|null $description
-     * @param int $type
-     *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
-     *
-     * @return SettlementRequestInterface
+     * @inheritdoc
      */
     public static function createSettlementRequest($amount, $purse, $account, $description = null, $type = Settlement::TYPE_SHABA)
     {

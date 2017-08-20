@@ -15,7 +15,7 @@ interface AccountingInterface
      *
      * @param string $meta
      * @param integer|\yii\web\IdentityInterface $user
-     * @return mixed
+     * @return AccountingInterface
      */
     public static function get($meta, $user);
 
@@ -23,7 +23,7 @@ interface AccountingInterface
      * Return key value.
      *
      * @param string $key
-     * @param \yii\web\IdentityInterface $userIdentity
+     * @param integer|\yii\web\IdentityInterface $userIdentity
      *
      * @return string
      */
@@ -32,7 +32,7 @@ interface AccountingInterface
     /**
      * Return user amount.
      *
-     * @param \yii\web\IdentityInterface $userIdentity
+     * @param integer|\yii\web\IdentityInterface $userIdentity
      *
      * @return float
      */
@@ -42,27 +42,28 @@ interface AccountingInterface
      * Create a deposit transaction from selected purse.
      *
      * @param float $amount Amount
-     * @param PurseInterface $purse Purse object
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
+     * @param integer|PurseInterface $purse Purse object
+     * @param string $description
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException Throw if purse is not valid.
      *
      * @return TransactionInterface
      */
-    public static function deposit($amount, $purse, $userIdentity = null);
+    public static function deposit($amount, $purse, $description);
 
     /**
      * Create a whitdraw transaction from selected purse.
      *
      * @param float $amount amount
      * @param PurseInterface $purse Purse object
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
+     * @param string $description
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return TransactionInterface
      */
-    public static function withdraw($amount, $purse, $userIdentity = null);
+    public static function withdraw($amount, $purse, $description);
 
     /**
      * Create a settlement request from selected purse to selected account.
@@ -72,26 +73,24 @@ interface AccountingInterface
      * @param AccountInterface $account
      * @param string|null $description
      * @param int $type
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return SettlementRequestInterface
      */
-    public static function settlementRequest($amount, $purse, $account, $description = null, $type = SettlementRequestInterface::TYPE_SHABA, $userIdentity = null);
+    public static function settlementRequest($amount, $purse, $account, $description = null, $type = SettlementRequestInterface::TYPE_SHABA);
 
     /**
      * Block a settlement request.
      *
      * @param SettlementRequestInterface $request
      * @param string|null $note
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function blockSettlementRequest($request, $note = null, $userIdentity = null);
+    public static function blockSettlementRequest($request, $note = null);
 
     /**
      * Confirm a settlment request.
@@ -99,26 +98,24 @@ interface AccountingInterface
      * @param SettlementRequestInterface $request
      * @param string $bankTrackingCode Bank trakcing code for loging.
      * @param string|null $note
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function confirmSettlementRequest($request, $bankTrackingCode, $note = null, $userIdentity = null);
+    public static function confirmSettlementRequest($request, $bankTrackingCode, $note = null);
 
     /**
      * Reject a settlement request.
      *
      * @param SettlementRequestInterface $request
      * @param string|null $note
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function rejectSettlementRequest($request, $note = null, $userIdentity = null);
+    public static function rejectSettlementRequest($request, $note = null);
 
     /**
      * Create a new purse.
@@ -138,40 +135,37 @@ interface AccountingInterface
      *
      * @param PurseInterface $purse
      * @param string|null $note
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function blockPurse($purse, $note = null, $userIdentity = null);
+    public static function blockPurse($purse, $note = null);
 
     /**
      * Unblock a blocked purse.
      *
      * @param PurseInterface $purse
      * @param string|null $note
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function unblockPurse($purse, $note = null, $userIdentity = null);
+    public static function unblockPurse($purse, $note = null);
 
     /**
      * Remove a purse.
      *
      * @param PurseInterface $purse
      * @param bool $force If purse is not emmoty then process will stop. by setting this value to true, purse will delte even if have amount.
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RiskException
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function removePurse($purse, $force = false, $userIdentity = null);
+    public static function removePurse($purse, $force = false);
 
     /**
      * Create a bank account.
@@ -194,33 +188,30 @@ interface AccountingInterface
      *
      * @param AccountInterface $account
      * @param string|null $note
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function confirmAccount($account, $note = null, $userIdentity = null);
+    public static function confirmAccount($account, $note = null);
 
     /**
      * Block an account.
      *
      * @param AccountInterface $account
      * @param string|null $note
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
      *
      * @return void
      */
-    public static function blockAccount($account, $note = null, $userIdentity = null);
+    public static function blockAccount($account, $note = null);
 
     /**
      * Remove an account.
      *
      * @param AccountInterface $account
      * @param bool $force If purse is not emmoty then process will stop. by setting this value to true, purse will delte even if have amount.
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
      *
      * @throws \aminkt\userAccounting\exceptions\RiskException
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
@@ -228,5 +219,5 @@ interface AccountingInterface
      *
      * @return void
      */
-    public static function removeAccount($account, $force = false, $userIdentity = null);
+    public static function removeAccount($account, $force = false);
 }

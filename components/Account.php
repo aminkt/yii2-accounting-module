@@ -155,25 +155,10 @@ class Account extends Component
      * @param integer $fromUserId The user id that we want migrate from that.
      * @param integer $toUserId The user id that we want migrate ti that.
      *
-     * @return integer Return rows in database that changed.
+     * @return boolean
      */
     public static function migrateAccount($fromUserId, $toUserId){
-        /** @var \yii\db\ActiveRecord[] $models */
-        $models = [
-            UserAccounting::className(),
-            Purse::className(),
-            Settlement::className(),
-            Account::className(),
-            Transaction::className(),
-        ];
-
-        $rowsAffected = 0;
-        foreach ($models as $model) {
-            $q = new Query();
-            $rowsAffected += $q->createCommand()->update($model::tableName(), ['userId' => $toUserId], ['userId' => $fromUserId])->execute();
-        }
-
-        return $rowsAffected;
+        return UserAccounting::migrate($fromUserId, $toUserId);
     }
 
     /**

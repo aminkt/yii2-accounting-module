@@ -30,10 +30,6 @@ use yii\db\ActiveRecord;
  */
 class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterface
 {
-    const STATUS_WAITING = 1;
-    const STATUS_CONFIRMED = 2;
-    const STATUS_REJECTED = 3;
-
     /**
      * @inheritdoc
      */

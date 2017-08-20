@@ -45,7 +45,7 @@ interface AccountingInterface
      * @param integer|PurseInterface $purse Purse object
      * @param string $description
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException Throw if purse is not valid.
      *
      * @return TransactionInterface
@@ -59,7 +59,7 @@ interface AccountingInterface
      * @param PurseInterface $purse Purse object
      * @param string $description
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return TransactionInterface
      */
@@ -74,7 +74,7 @@ interface AccountingInterface
      * @param string|null $description
      * @param int $type
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return SettlementRequestInterface
      */
@@ -86,7 +86,7 @@ interface AccountingInterface
      * @param SettlementRequestInterface $request
      * @param string|null $note
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -99,7 +99,7 @@ interface AccountingInterface
      * @param string $bankTrackingCode Bank trakcing code for loging.
      * @param string|null $note
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -111,7 +111,7 @@ interface AccountingInterface
      * @param SettlementRequestInterface $request
      * @param string|null $note
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -124,7 +124,7 @@ interface AccountingInterface
      * @param string $name Name of purse
      * @param string|null $description
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return PurseInterface
      */
@@ -136,7 +136,7 @@ interface AccountingInterface
      * @param PurseInterface $purse
      * @param string|null $note
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -148,7 +148,7 @@ interface AccountingInterface
      * @param PurseInterface $purse
      * @param string|null $note
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -161,7 +161,7 @@ interface AccountingInterface
      * @param bool $force If purse is not emmoty then process will stop. by setting this value to true, purse will delte even if have amount.
      *
      * @throws \aminkt\userAccounting\exceptions\RiskException
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -177,7 +177,7 @@ interface AccountingInterface
      * @param string|null $shaba Account Shaba number
      * @param string|null $accountNumber Account nummber
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return AccountInterface
      */
@@ -189,7 +189,7 @@ interface AccountingInterface
      * @param AccountInterface $account
      * @param string|null $note
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -201,7 +201,7 @@ interface AccountingInterface
      * @param AccountInterface $account
      * @param string|null $note
      *
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */
@@ -214,10 +214,21 @@ interface AccountingInterface
      * @param bool $force If purse is not emmoty then process will stop. by setting this value to true, purse will delte even if have amount.
      *
      * @throws \aminkt\userAccounting\exceptions\RiskException
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      *
      * @return void
      */
     public static function removeAccount($account, $force = false);
+
+    /**
+     * @param integer|\yii\web\IdentityInterface $fromUser
+     * @param integer|\yii\web\IdentityInterface $toUser
+     *
+     * @throws \aminkt\userAccounting\exceptions\RiskException
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return bool
+     */
+    public static function migrate($fromUser, $toUser);
 }

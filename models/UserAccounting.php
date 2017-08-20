@@ -4,14 +4,10 @@ namespace aminkt\userAccounting\models;
 
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\interfaces\AccountingInterface;
-use aminkt\userAccounting\interfaces\AccountInterface;
-use aminkt\userAccounting\interfaces\PurseInterface;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
-use aminkt\userAccounting\interfaces\TransactionInterface;
-use userAccounting\components\TransactionEvent;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\validators\NumberValidator;
+use yii\db\Query;
 use yii\web\IdentityInterface;
 
 /**
@@ -248,5 +244,45 @@ class UserAccounting extends ActiveRecord implements AccountingInterface
             return \Yii::$app->getUser()->getIdentity();
 
         return $userIdentity;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function migrate($fromUser, $toUser)
+    {
+        $from = is_integer($fromUser) ? $fromUser : static::getUser($fromUser)->getId();
+
+        $to = is_integer($toUser) ? $toUser : static::getUser($toUser)->getId();
+
+        /** @var \yii\db\ActiveRecord[] $models */
+        $models = [
+            UserAccounting::className(),
+            Purse::className(),
+            Settlement::className(),
+            Account::className(),
+            Transaction::className(),
+        ];
+        $rowsAffected = 0;
+        foreach ($models as $model) {
+            $q = new Query();
+            if ($model == Purse::className()) {
+                $fromPurses = Purse::findAll(['userId' => $from]);
+                foreach ($fromPurses as $purse) {
+                    $same = Purse::findOne([
+                        'userId' => $to,
+                        'name' => $purse->name
+                    ]);
+                    if ($same) {
+                        $purse->name .= '- همگام شده';
+                        $purse->description = 'این کیف پول از حساب قبلی شما همگام شده است. در صورت تمایل آن را حذف کنید.';
+                        $purse->save(false);
+                    }
+                }
+            }
+            $rowsAffected += $q->createCommand()->update($model::tableName(), ['userId' => $to], ['userId' => $from])->execute();
+        }
+
+        return true;
     }
 }

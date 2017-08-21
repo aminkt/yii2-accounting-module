@@ -1,26 +1,26 @@
 {
-	"name": "aminkt/yii2-userAccounting-module",
-	"description": "User accounting module for  yii2",
-  	"keywords": ["yii", "accounting", "module", "user", "user accounting"],
-	"type": "yii2-extension",
-	"support": {
-		"source": "https://gitlab.com/aminkt/yii2-userAccounting-module"
-	},
-	"authors": [
-		{
-			"name": "Amin Keshavarz",
-			"email": "ak_1596@yahoo.com"
-		}
-	],
-  "require": {
-    "yiisoft/yii2": "~2.0.11"
-  },
-	"autoload": {
-		"psr-4": {
-			"aminkt\\userAccounting\\": ""
-		}
-	},
-	"extra": {
+    "name": "aminkt/yii2-userAccounting-module",
+    "description": "User accounting module for  yii2",
+    "keywords": ["yii", "accounting", "module", "user", "user accounting"],
+    "type": "yii2-extension",
+    "support": {
+    	"source": "https://gitlab.com/aminkt/yii2-userAccounting-module"
+    },
+    "authors": [
+    	{
+    		"name": "Amin Keshavarz",
+    		"email": "ak_1596@yahoo.com"
+    	}
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.11"
+    },
+    "autoload": {
+    	"psr-4": {
+    		"aminkt\\userAccounting\\": ""
+    	}
+    },
+    "extra": {
         "branch-alias": {
           "dev-master": "master"
         }

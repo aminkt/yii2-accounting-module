@@ -94,7 +94,7 @@ class Account extends ActiveRecord implements AccountInterface
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_UPDATE] = ['bankName', 'cardNumber', 'accountNumber','shaba','status','operatorNote'];
+        $scenarios[self::SCENARIO_UPDATE] = ['bankName', 'cardNumber', 'accountNumber','shaba','owner','status','operatorNote'];
         return $scenarios;
     }
 
@@ -138,6 +138,7 @@ class Account extends ActiveRecord implements AccountInterface
         $model->cardNumber = $updatedModel->cardNumber;
         $model->accountNumber = $updatedModel->accountNumber;
         $model->shaba = $updatedModel->shaba;
+        $model->owner = $updatedModel->owner;
         $model->status = $updatedModel->status;
         $model->operatorNote = $updatedModel->operatorNote;
         if ($model->save()) {

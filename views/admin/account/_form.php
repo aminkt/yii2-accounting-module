@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'owner', [
         'template' => '{label}<div class="col-md-4">{input}<span class="help-block">{hint}{error}</span></div>',
         'labelOptions' => ['class' => 'control-label col-md-3']
-    ])->textInput(['maxlength' => true, 'class' => 'form-control', 'readonly' => true, 'disabled' => true]) ?>
+    ])->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
     <?= $form->field($model, 'bankName', [
         'template' => '{label}<div class="col-md-4">{input}<span class="help-block">{hint}{error}</span></div>',
         'labelOptions' => ['class' => 'control-label col-md-3']

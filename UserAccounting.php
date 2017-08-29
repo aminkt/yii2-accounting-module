@@ -1,7 +1,6 @@
 <?php
 
 namespace aminkt\userAccounting;
-use aminkt\userAccounting\controllers\panel\DefaultController;
 
 /**
  * userAccounting module definition class
@@ -23,8 +22,5 @@ class UserAccounting extends \yii\base\Module
     {
         parent::init();
         \Yii::configure($this, require( __DIR__.DIRECTORY_SEPARATOR.'config.php'));
-        $this->controllerMap = [
-            'account'=>DefaultController::className(),
-        ];
     }
 }

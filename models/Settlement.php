@@ -184,12 +184,28 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
      */
     public function rejectSettlementRequest($note = null)
     {
-        $this->status = self::STATUS_REJECTED;
+        $this->status = self::STATUS_REJECTTED;
         $this->operatorNote = $note;
 
         if (!$this->save()) {
             \Yii::error($this->getErrors(), self::class);
             throw new RuntimeException("Settlement rejection become failed");
         }
+    }
+
+    /**
+     * @param integer $fromUser
+     * @param integer $toUser
+     *
+     * @throws \aminkt\userAccounting\exceptions\RiskException
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return bool
+     */
+    public static function migrate($fromUser, $toUser)
+    {
+        $q = new \yii\db\Query();
+        $q->createCommand()->update(self::tableName(), ['userId' => $toUser], ['userId' => $fromUser])->execute();
+        return true;
     }
 }

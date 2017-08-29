@@ -7,7 +7,6 @@ use aminkt\userAccounting\interfaces\AccountingInterface;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\db\Query;
 use yii\web\IdentityInterface;
 
 /**
@@ -255,34 +254,17 @@ class UserAccounting extends ActiveRecord implements AccountingInterface
 
         $to = is_integer($toUser) ? $toUser : static::getUser($toUser)->getId();
 
-        /** @var \yii\db\ActiveRecord[] $models */
+        /** @var \aminkt\userAccounting\interfaces\UserAccountingInterface[] $models */
         $models = [
             UserAccounting::className(),
             Purse::className(),
             Settlement::className(),
             Account::className(),
-            Transaction::className(),
+            \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel,
         ];
-        $rowsAffected = 0;
         foreach ($models as $model) {
-            $q = new Query();
-            if ($model == Purse::className()) {
-                $fromPurses = Purse::findAll(['userId' => $from]);
-                foreach ($fromPurses as $purse) {
-                    $same = Purse::findOne([
-                        'userId' => $to,
-                        'name' => $purse->name
-                    ]);
-                    if ($same) {
-                        $purse->name .= '- همگام شده';
-                        $purse->description = 'این کیف پول از حساب قبلی شما همگام شده است. در صورت تمایل آن را حذف کنید.';
-                        $purse->save(false);
-                    }
-                }
-            }
-            $rowsAffected += $q->createCommand()->update($model::tableName(), ['userId' => $to], ['userId' => $from])->execute();
+            $model::migrate($from, $to);
         }
-
         return true;
     }
 }

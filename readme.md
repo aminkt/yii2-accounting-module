@@ -27,6 +27,7 @@ Step2: Add flowing lines in your application admin config in module part:
 'userAccounting' => [
     'class' => \aminkt\userAccounting\UserAccounting::className(),
     'controllerNamespace' => \aminkt\userAccounting\UserAccounting::ADMIN_CONTROLLER_NAMESPACE,
+    'transactionModel' => 'your\transaction-model\class',
 ],
 ```
 
@@ -36,8 +37,14 @@ Step3: Add flowing lines in your application frontend config in module part:
 'userAccounting' => [
     'class' => \aminkt\userAccounting\UserAccounting::className(),
     'controllerNamespace' => \aminkt\userAccounting\UserAccounting::PANEL_CONTROLLER_NAMESPACE,
+    'transactionModel' => 'your\transaction-model\class',
 ],
 ```
+
+Step4: Implement `aminkt\userAccounting\interfaces\TransactionInterface` into your transaction model.
+
+> NOTE: Because every application need itself transaction model implementation so we don't create that in this module. 
+
 ---
 **Database Migrations**
 

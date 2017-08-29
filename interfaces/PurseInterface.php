@@ -7,7 +7,7 @@ namespace aminkt\userAccounting\interfaces;
  * @author Amin Keshavarz <Ak_1596@yahoo.com)
  * @package aminkt\userAccounting\interfaces
  */
-interface PurseInterface
+interface PurseInterface extends UserAccountingInterface
 {
     /** Settlement request status */
     const STATUS_WAITING = 1;
@@ -17,6 +17,13 @@ interface PurseInterface
     const STATUS_BLOCKED = 3;
     /** Settlement request status */
     const STATUS_REMOVED = 4;
+
+    /**
+     * Return purse id.
+     *
+     * @return mixed
+     */
+    public function getId();
 
     /**
      * Create a new purse.

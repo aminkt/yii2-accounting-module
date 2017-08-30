@@ -37,7 +37,7 @@ interface TransactionInterface extends UserAccountingInterface
      *
      * @return boolean  True if deposit apply correctly and false if not.
      */
-    public function deposit($amount, $purse, $description, $type);
+    public static function deposit($amount, $purse, $description, $type);
 
     /**
      * Deposit amount to defined purse.
@@ -49,7 +49,7 @@ interface TransactionInterface extends UserAccountingInterface
      *
      * @return boolean  True if withdraw apply correctly and false if not.
      */
-    public function withdraw($amount, $purse, $description, $type);
+    public static function withdraw($amount, $purse, $description, $type);
 
     /**
      * Return purse object of transaction model.

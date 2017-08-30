@@ -26,6 +26,13 @@ interface PurseInterface extends UserAccountingInterface
     public function getId();
 
     /**
+     * Return purse user id
+     *
+     * @return integer
+     */
+    public function getUserId();
+
+    /**
      * Create a new purse.
      *
      * @param \yii\web\IdentityInterface $userIdentity Owner identity object.

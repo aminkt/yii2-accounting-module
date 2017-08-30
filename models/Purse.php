@@ -5,6 +5,7 @@ namespace aminkt\userAccounting\models;
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\PurseInterface;
+use aminkt\userAccounting\interfaces\TransactionInterface;
 use userAccounting\components\TransactionEvent;
 use Yii;
 use yii\db\Query;
@@ -133,6 +134,10 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
                 ->setType($event::TYPE_DEPOSIT)
                 ->setTime(time());
             Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_PURSE_DEPOSIT, $event);
+
+            /** @var TransactionInterface $transactionModelName */
+            $transactionModelName = \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel;
+            $transactionModelName::deposit($amount, $this, $description, TransactionInterface::TYPE_NORMAL);
         } catch (\Exception $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -157,6 +162,10 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
                 ->setType($event::TYPE_WITHDRAW)
                 ->setTime(time());
             Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_PURSE_DEPOSIT, $event);
+
+            /** @var TransactionInterface $transactionModelName */
+            $transactionModelName = \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel;
+            $transactionModelName::withdraw($amount, $this, $description, TransactionInterface::TYPE_NORMAL);
         } catch (\Exception $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -318,5 +327,15 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
         }
         $q->createCommand()->update(self::tableName(), ['userId' => $toUser], ['userId' => $fromUser])->execute();
         return true;
+    }
+
+    /**
+     * Return purse user object
+     *
+     * @return integer
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 }

@@ -23,11 +23,6 @@ class m170818_140200_change_structure extends Migration
         $this->addColumn('{{%user_accounting_settlements}}', 'settlementType', $this->smallInteger(2) . ' AFTER `operatorNote`');
         $this->renameColumn("{{%user_accounting_settlements}}", "payTime", "settlementTime");
 
-        // Transactions table changes
-        $this->addColumn('{{%user_accounting_transactions}}', 'purseId', $this->integer() . ' AFTER `userId`');
-        $this->addColumn('{{%user_accounting_transactions}}', 'purseRemains', $this->double()->defaultValue(0) . ' AFTER `amount`');
-        $this->renameColumn("{{%user_accounting_transactions}}", "remains", "totalRemains");
-
         // Accounting table cahnges
         $this->dropTable('{{%user_accounting}}');
 
@@ -48,8 +43,6 @@ class m170818_140200_change_structure extends Migration
             'name' => $this->string()->notNull(),
             'description' => $this->text(),
             'operatorNote' => $this->text(),
-            'totalDeposit' => $this->double()->defaultValue(0),
-            'totalWithdraw' => $this->double()->defaultValue(0),
             'autoSettlement' => $this->smallInteger(1)->defaultValue(0),
             'status' => $this->smallInteger(2),
             'updateTime' => $this->integer(20),
@@ -66,15 +59,6 @@ class m170818_140200_change_structure extends Migration
             'CASCADE'
         );
 
-        $this->addForeignKey(
-            'fk-user_accounting_transactions-purseId',
-            '{{%user_accounting_transactions}}',
-            'purseId',
-            '{{%user_accounting_purses}}',
-            'id',
-            'SET NULL',
-            'CASCADE'
-        );
 
         $this->addForeignKey(
             'fk-user_accounting_settelemets-purseId',

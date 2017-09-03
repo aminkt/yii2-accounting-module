@@ -17,7 +17,6 @@ use yii\db\ActiveRecord;
  * @property string $accountNumber
  * @property string $shaba
  * @property string $owner
- * @property double $amountPaid
  * @property integer $status
  * @property string $operatorNote
  * @property integer $updateTime
@@ -61,8 +60,6 @@ class Account extends ActiveRecord implements AccountInterface
             [['userId', 'status', 'bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
-            [['amountPaid'], 'number'],
-            [['amountPaid'], 'default', 'value'=>0],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
         ];
     }
@@ -185,5 +182,21 @@ class Account extends ActiveRecord implements AccountInterface
             \Yii::error($this->getErrors(), self::class);
             throw new RuntimeException("Account removing become failed");
         }
+    }
+
+    /**
+     * @param integer $fromUser
+     * @param integer $toUser
+     *
+     * @throws \aminkt\userAccounting\exceptions\RiskException
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return bool
+     */
+    public static function migrate($fromUser, $toUser)
+    {
+        $q = new \yii\db\Query();
+        $q->createCommand()->update(self::tableName(), ['userId' => $toUser], ['userId' => $fromUser])->execute();
+        return true;
     }
 }

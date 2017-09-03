@@ -16,7 +16,6 @@ class m170110_111551_init extends Migration
             'accountNumber'=>$this->string(),
             'shaba'=>$this->string(),
             'owner'=>$this->string(),
-            'amountPaid'=>$this->double()->defaultValue(0),
             'status'=>$this->smallInteger(2),
             'updateTime'=>$this->integer(20),
             'createTime'=>$this->integer(20),
@@ -45,15 +44,6 @@ class m170110_111551_init extends Migration
             'CASCADE'
         );
 
-        $this->createTable("{{%user_accounting_transactions}}",[
-            'id'=>$this->primaryKey(),
-            'userId'=>$this->integer(),
-            'amount'=>$this->double()->defaultValue(0),
-            'remains'=>$this->double()->defaultValue(0),
-            'description'=>$this->text(),
-            'type'=>$this->smallInteger(2),
-            'time'=>$this->integer(20),
-        ]);
 
         $this->createTable("{{%user_accounting}}",[
             'userId'=>$this->integer(),
@@ -78,7 +68,6 @@ class m170110_111551_init extends Migration
         $this->dropPrimaryKey('fk-user_accounting-accountId', '{{%user_accounting}}');
 
         $this->dropTable('{{%user_accounting}}');
-        $this->dropTable('{{%user_accounting_transactions}}');
         $this->dropTable('{{%user_accounting_pay_requests}}');
         $this->dropTable('{{%user_accounting_accounts}}');
     }

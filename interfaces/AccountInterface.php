@@ -7,7 +7,7 @@ namespace aminkt\userAccounting\interfaces;
  * @author Amin Keshavarz <Ak_1596@yahoo.com)
  * @package aminkt\userAccounting\interfaces
  */
-interface AccountInterface
+interface AccountInterface extends UserAccountingInterface
 {
     /** Settlement request status */
     const STATUS_WAITING = 1;

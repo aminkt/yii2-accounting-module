@@ -62,7 +62,6 @@ class AccountController extends Controller
 
         if ($model->load(\Yii::$app->getRequest()->post())) {
             $model->status = $model::STATUS_WAITING;
-            $model->amountPaid = 0;
             $model->userId = \Yii::$app->getUser()->getId();
             $model->owner = \Yii::$app->getUser()->getIdentity()->name . ' ' . \Yii::$app->getUser()->getIdentity()->family;
             if ($model->save()) {

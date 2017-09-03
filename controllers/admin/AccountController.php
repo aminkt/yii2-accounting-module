@@ -61,8 +61,7 @@ class AccountController extends Controller
         $model->setScenario(Account::SCENARIO_UPDATE);
         $updatedModel = $model;
         if ($updatedModel->load(Yii::$app->request->post())) {
-            $updatedModel->userId = $model->userId;;
-            $updatedModel->amountPaid = $model->amountPaid;
+            $updatedModel->userId = $model->userId;
             if (Account::updateAccount($model, $updatedModel))
                 Alert::success('حساب با موفقیت ویرایش شد.', ' ');
             else

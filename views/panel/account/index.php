@@ -45,7 +45,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'cardNumber',
                     'accountNumber',
                     'shaba',
-                    'amountPaid',
                     [
                         'attribute' => 'status',
                         'format' => 'raw',

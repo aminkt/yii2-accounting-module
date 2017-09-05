@@ -105,7 +105,7 @@ interface PurseInterface extends UserAccountingInterface
      * @param bool $force If purse is not emmoty then process will stop. by setting this value to true, purse will delte even if have amount.
      *
      * @throws \aminkt\userAccounting\exceptions\RiskException
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */

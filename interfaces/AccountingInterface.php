@@ -30,7 +30,7 @@ interface AccountingInterface extends UserAccountingInterface
     public static function getValue($key, $userIdentity = null);
 
     /**
-     * Return user amount.
+     * Calculate and return user amount.
      *
      * @param integer|\yii\web\IdentityInterface $userIdentity
      *

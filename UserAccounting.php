@@ -6,6 +6,11 @@ use aminkt\userAccounting\exceptions\InvalidArgumentException;
 
 /**
  * userAccounting module definition class
+ *
+ * @property \aminkt\userAccounting\components\Account $account    Account component.
+ *
+ * @author Amin Keshavarz <ak_1596@yahoo.com>
+ * @package aminkt\userAccounting
  */
 class UserAccounting extends \yii\base\Module
 {
@@ -39,5 +44,13 @@ class UserAccounting extends \yii\base\Module
         $this->controllerMap = [
             'account'=>DefaultController::className(),
         ];
+    }
+
+    public static function getInstance()
+    {
+        if (parent::getInstance())
+            return parent::getInstance();
+
+        return \Yii::$app->getModule('userAccounting');
     }
 }

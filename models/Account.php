@@ -26,6 +26,8 @@ use yii\db\ActiveRecord;
  */
 class Account extends ActiveRecord implements AccountInterface
 {
+    const SCENARIO_UPDATE = 'update';
+
     /**
      * @inheritdoc
      */
@@ -77,9 +79,20 @@ class Account extends ActiveRecord implements AccountInterface
             'owner' => 'صاحب حساب',
             'amountPaid' => 'مبلغ واریز شده (تومان)',
             'status' => 'وضعیت',
+            'operatorNote'=>'یادداشت اپراتور',
             'updateTime' => 'Update Time',
             'createTime' => 'Create Time',
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_UPDATE] = ['bankName', 'cardNumber', 'accountNumber','shaba','owner','status','operatorNote'];
+        return $scenarios;
     }
 
     /**
@@ -108,6 +121,29 @@ class Account extends ActiveRecord implements AccountInterface
 
         \Yii::error($account->getErrors(), self::class);
         throw new RuntimeException("Account model creation become failed");
+    }
+
+    /**
+     * Update Account information.
+     * @param Account $model Model of account.
+     * @param Account $updatedModel UpdatedModel of account.
+     * @return bool|Account
+     */
+    public static function updateAccount($model ,$updatedModel)
+    {
+        $model->bankName = $updatedModel->bankName;
+        $model->cardNumber = $updatedModel->cardNumber;
+        $model->accountNumber = $updatedModel->accountNumber;
+        $model->shaba = $updatedModel->shaba;
+        $model->owner = $updatedModel->owner;
+        $model->status = $updatedModel->status;
+        $model->operatorNote = $updatedModel->operatorNote;
+        if ($model->save()) {
+            return $model;
+        } else {
+            \Yii::error($model->getErrors(), self::className());
+        }
+        return false;
     }
 
     /**

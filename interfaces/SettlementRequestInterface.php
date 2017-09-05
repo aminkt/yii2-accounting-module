@@ -7,7 +7,7 @@ namespace aminkt\userAccounting\interfaces;
  * @author Amin Keshavarz <Ak_1596@yahoo.com)
  * @package aminkt\userAccounting\interfaces
  */
-interface SettlementRequestInterface
+interface SettlementRequestInterface extends UserAccountingInterface
 {
     /** Settlement type */
     const TYPE_CART_TO_CART = 1;

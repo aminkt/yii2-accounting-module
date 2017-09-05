@@ -4,7 +4,6 @@ namespace aminkt\userAccounting\models;
 
 use aminkt\userAccounting\exceptions\RuntimeException;
 use userAccounting\components\Account;
-use Yii;
 use yii\base\Model;
 
 /**
@@ -73,6 +72,7 @@ class SettlementRequestForm extends Model
      * Create a settlement request. request.
      *
      * @deprecated Since ver 1.0 you should use `settlement()` instead this method. available until version 3.
+     *
      * @return bool
      */
     public function regPayRequest()

@@ -8,7 +8,7 @@ namespace aminkt\userAccounting\interfaces;
  * @author Amin Keshavarz <Ak_1596@yahoo.com)
  * @package aminkt\userAccounting\interfaces
  */
-interface AccountingInterface
+interface AccountingInterface extends UserAccountingInterface
 {
     /**
      * Return a accounting model.
@@ -30,7 +30,7 @@ interface AccountingInterface
     public static function getValue($key, $userIdentity = null);
 
     /**
-     * Return user amount.
+     * Calculate and return user amount.
      *
      * @param integer|\yii\web\IdentityInterface $userIdentity
      *
@@ -220,15 +220,4 @@ interface AccountingInterface
      * @return void
      */
     public static function removeAccount($account, $force = false);
-
-    /**
-     * @param integer|\yii\web\IdentityInterface $fromUser
-     * @param integer|\yii\web\IdentityInterface $toUser
-     *
-     * @throws \aminkt\userAccounting\exceptions\RiskException
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
-     *
-     * @return bool
-     */
-    public static function migrate($fromUser, $toUser);
 }

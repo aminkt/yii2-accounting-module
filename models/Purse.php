@@ -8,6 +8,7 @@ use aminkt\userAccounting\interfaces\PurseInterface;
 use aminkt\userAccounting\interfaces\TransactionInterface;
 use userAccounting\components\TransactionEvent;
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%user_accounting_purses}}".
@@ -18,8 +19,6 @@ use Yii;
  * @property string $name
  * @property string $description
  * @property string $operatorNote
- * @property double $totalDeposit
- * @property double $totalWithdraw
  * @property integer $autoSettlement
  * @property integer $status
  * @property integer $updateTime
@@ -29,9 +28,6 @@ use Yii;
  */
 class Purse extends \yii\db\ActiveRecord implements PurseInterface
 {
-    const EVENT_DEPOSIT = 'deposit';
-    const EVENT_WITHDRAW = 'withdraw';
-
     /**
      * @inheritdoc
      */
@@ -44,8 +40,16 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     public function init()
     {
         parent::init();
-        $this->on(self::EVENT_DEPOSIT, [$this, 'onDeposit']);
-        $this->on(self::EVENT_WITHDRAW, [$this, 'onWithdraw']);
+        $this->on(\aminkt\userAccounting\UserAccounting::EVENT_PURSE_DEPOSIT_ACK, [$this, 'onDeposit']);
+        $this->on(\aminkt\userAccounting\UserAccounting::EVENT_PURSE_WITHDRAW_ACK, [$this, 'onWithdraw']);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -82,8 +86,6 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
             [['userId', 'accountId', 'autoSettlement', 'status', 'updateTime', 'createTime'], 'integer'],
             [['name'], 'required'],
             [['description', 'operatorNote'], 'string'],
-            [['totalDeposit', 'totalWithdraw'], 'number'],
-            [['totalDeposit', 'totalWithdraw'], 'default', 'value' => 0],
             [['name'], 'string', 'max' => 255],
         ];
     }
@@ -100,8 +102,6 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
             'name' => 'Name',
             'description' => 'Description',
             'operatorNote' => 'Operator Note',
-            'totalDeposit' => 'Total Deposit',
-            'totalWithdraw' => 'Total Withdraw',
             'autoSettlement' => 'Auto Settlement',
             'status' => 'Status',
             'updateTime' => 'Update Time',
@@ -125,32 +125,22 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
         if (!(is_integer($amount) or is_float($amount) or is_double($amount))) {
             throw new InvalidArgumentException("Amount should be in double.");
         }
-        $transactionModel = new Transaction();
-        $transaction = Transaction::getDb()->beginTransaction();
         try {
-            $transactionModel->amount = $amount;
-            $transactionModel->purseId = $this->id;
-            $transactionModel->purseRemains = $this->getAmount() + $amount;
-            $transactionModel->totalRemains = (UserAccounting::getAmount($this->id) + $amount);
-            $transactionModel->description = $description;
-            $transactionModel->type = Transaction::TYPE_NORMAL;
-            if ($transactionModel->save()) {
-                $event = new TransactionEvent();
-                $event->setTransaction($transactionModel);
-                $event->setType($event::TYPE_DEPOSIT);
-                $this->trigger(self::EVENT_DEPOSIT, $event);
-            }
+            $event = new TransactionEvent();
+            $event->setAmount($amount)
+                ->setPurse($this)
+                ->setUserId($this->userId)
+                ->setDescription($description)
+                ->setType($event::TYPE_DEPOSIT)
+                ->setTime(time());
+            Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_PURSE_DEPOSIT, $event);
 
-            $this->totalDeposit += $amount;
-            if (!$this->save())
-                throw new RuntimeException("Purse cant update itself in deposit action.");
-
-            $transaction->commit();
+            /** @var TransactionInterface $transactionModelName */
+            $transactionModelName = \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel;
+            $transactionModelName::deposit($amount, $this, $description, TransactionInterface::TYPE_NORMAL);
         } catch (\Exception $e) {
-            $transaction->rollBack();
             throw $e;
         } catch (\Throwable $e) {
-            $transaction->rollBack();
             throw $e;
         }
     }
@@ -163,32 +153,22 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
         if (!(is_integer($amount) or is_float($amount) or is_double($amount))) {
             throw new InvalidArgumentException("Amount should be in double.");
         }
-        $transactionModel = new Transaction();
-        $transaction = Transaction::getDb()->beginTransaction();
         try {
-            $transactionModel->amount = (-$amount);
-            $transactionModel->purseId = $this->id;
-            $transactionModel->purseRemains = $this->getAmount() - $amount;
-            $transactionModel->totalRemains = (UserAccounting::getAmount($this->id) - $amount);
-            $transactionModel->description = $description;
-            $transactionModel->type = Transaction::TYPE_NORMAL;
-            if ($transactionModel->save()) {
-                $event = new TransactionEvent();
-                $event->setTransaction($transactionModel);
-                $event->setType($event::TYPE_WITHDRAW);
-                $this->trigger(self::EVENT_WITHDRAW, $event);
-            }
+            $event = new TransactionEvent();
+            $event->setAmount($amount)
+                ->setPurse($this)
+                ->setUserId($this->userId)
+                ->setDescription($description)
+                ->setType($event::TYPE_WITHDRAW)
+                ->setTime(time());
+            Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_PURSE_DEPOSIT, $event);
 
-            $this->totalWithdraw += $amount;
-            if (!$this->save())
-                throw new RuntimeException("Purse cant update itself in withdraw action.");
-
-            $transaction->commit();
+            /** @var TransactionInterface $transactionModelName */
+            $transactionModelName = \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel;
+            $transactionModelName::withdraw($amount, $this, $description, TransactionInterface::TYPE_NORMAL);
         } catch (\Exception $e) {
-            $transaction->rollBack();
             throw $e;
         } catch (\Throwable $e) {
-            $transaction->rollBack();
             throw $e;
         }
     }
@@ -218,30 +198,17 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     }
 
     /**
-     * Return amount of purse.
+     * Calculate and return amount of purse.
      *
      * @return double
      */
     public function getAmount()
     {
-        return $this->getTotalDeposit() - $this->getTotalWithdraw();
+        /** @var \aminkt\userAccounting\interfaces\TransactionInterface $transactionModelName */
+        $transactionModelName = \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel;
+        return $transactionModelName::getTotalPurseDeposit($this) - $transactionModelName::getTotalPurseWithdraw($this);
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalDeposit()
-    {
-        return $this->totalDeposit;
-    }
-
-    /**
-     * @return float
-     */
-    public function getTotalWithdraw()
-    {
-        return $this->totalWithdraw;
-    }
 
     /**
      * Block a purse.
@@ -332,5 +299,43 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
         if ($this->autoSettlement)
             return true;
         return false;
+    }
+
+    /**
+     * @param integer $fromUser
+     * @param integer $toUser
+     *
+     * @throws \aminkt\userAccounting\exceptions\RiskException
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return bool
+     */
+    public static function migrate($fromUser, $toUser)
+    {
+        $q = new Query();
+        $fromPurses = Purse::findAll(['userId' => $fromUser]);
+        foreach ($fromPurses as $purse) {
+            $same = Purse::findOne([
+                'userId' => $toUser,
+                'name' => $purse->name
+            ]);
+            if ($same) {
+                $purse->name .= '- همگام شده';
+                $purse->description = 'این کیف پول از حساب قبلی شما همگام شده است. در صورت تمایل آن را حذف کنید.';
+                $purse->save(false);
+            }
+        }
+        $q->createCommand()->update(self::tableName(), ['userId' => $toUser], ['userId' => $fromUser])->execute();
+        return true;
+    }
+
+    /**
+     * Return purse user object
+     *
+     * @return integer
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 }

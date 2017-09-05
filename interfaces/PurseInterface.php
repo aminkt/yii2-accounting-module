@@ -7,7 +7,7 @@ namespace aminkt\userAccounting\interfaces;
  * @author Amin Keshavarz <Ak_1596@yahoo.com)
  * @package aminkt\userAccounting\interfaces
  */
-interface PurseInterface
+interface PurseInterface extends UserAccountingInterface
 {
     /** Settlement request status */
     const STATUS_WAITING = 1;
@@ -17,6 +17,20 @@ interface PurseInterface
     const STATUS_BLOCKED = 3;
     /** Settlement request status */
     const STATUS_REMOVED = 4;
+
+    /**
+     * Return purse id.
+     *
+     * @return mixed
+     */
+    public function getId();
+
+    /**
+     * Return purse user id
+     *
+     * @return integer
+     */
+    public function getUserId();
 
     /**
      * Create a new purse.
@@ -91,7 +105,7 @@ interface PurseInterface
      * @param bool $force If purse is not emmoty then process will stop. by setting this value to true, purse will delte even if have amount.
      *
      * @throws \aminkt\userAccounting\exceptions\RiskException
-     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      *
      * @return void
      */

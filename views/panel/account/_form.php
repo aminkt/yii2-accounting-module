@@ -5,6 +5,7 @@
  * Date: 8/27/17
  * Time: 3:19 PM
  */
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -43,7 +44,7 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             <?= Html::submitButton('<i class="fa fa-check"></i> ثبت حساب', ['class' => 'btn green']) ?>
-            <?= Html::button('<i class="fa fa-remove"></i> عدم ثبت', ['class' => 'btn grey-salsa']) ?>
+            <?= Html::a('<i class="fa fa-remove"></i> لغو', ['/userAccounting/account/index'], ['class' => 'btn grey-salsa']) ?>
         </div>
     </div>
 </div>

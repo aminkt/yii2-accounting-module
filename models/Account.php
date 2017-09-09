@@ -57,7 +57,7 @@ class Account extends ActiveRecord implements AccountInterface
     public function rules()
     {
         return [
-            [['userId', 'status', 'bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'required'],
+            [['userId', 'status', 'bankName', 'cardNumber', 'shaba', 'owner'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],

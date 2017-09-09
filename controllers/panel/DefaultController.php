@@ -6,7 +6,7 @@ namespace aminkt\userAccounting\controllers\panel;
 use aminkt\userAccounting\models\Account;
 use aminkt\userAccounting\models\Settlement;
 use aminkt\userAccounting\models\SettlementRequestForm;
-use aminkt\userAccounting\models\Transaction;
+use aminkt\userAccounting\UserAccounting;
 use common\widgets\alert\Alert;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -41,8 +41,9 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        $transactionModel = UserAccounting::getInstance()->transactionModel;
         $dataProvider = new ActiveDataProvider([
-            'query'=>Transaction::find()->where([
+            'query' => $transactionModel::find()->where([
                 'userId'=>\Yii::$app->getUser()->getId()
             ])
         ]);

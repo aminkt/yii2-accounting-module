@@ -59,16 +59,15 @@ class AccountController extends Controller
     {
         $model = $this->findModel($id);
         $model->setScenario(Account::SCENARIO_UPDATE);
-        $updatedModel = $model;
-        if ($updatedModel->load(Yii::$app->request->post())) {
-            $updatedModel->userId = $model->userId;
-            if (Account::updateAccount($model, $updatedModel))
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
                 Alert::success('حساب با موفقیت ویرایش شد.', ' ');
-            else
+            } else {
                 Alert::error('خطایی در ویرایش اطلاعات وجود دارد!', 'لطفا دوباره تلاش کنید.');
+            }
         }
         return $this->render('/admin/account/update', [
-            'model' => $updatedModel,
+            'model' => $model,
         ]);
     }
 

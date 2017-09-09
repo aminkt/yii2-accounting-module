@@ -124,29 +124,6 @@ class Account extends ActiveRecord implements AccountInterface
     }
 
     /**
-     * Update Account information.
-     * @param Account $model Model of account.
-     * @param Account $updatedModel UpdatedModel of account.
-     * @return bool|Account
-     */
-    public static function updateAccount($model ,$updatedModel)
-    {
-        $model->bankName = $updatedModel->bankName;
-        $model->cardNumber = $updatedModel->cardNumber;
-        $model->accountNumber = $updatedModel->accountNumber;
-        $model->shaba = $updatedModel->shaba;
-        $model->owner = $updatedModel->owner;
-        $model->status = $updatedModel->status;
-        $model->operatorNote = $updatedModel->operatorNote;
-        if ($model->save()) {
-            return $model;
-        } else {
-            \Yii::error($model->getErrors(), self::className());
-        }
-        return false;
-    }
-
-    /**
      * @inheritdoc
      */
     public function confirmAccount($note = null)

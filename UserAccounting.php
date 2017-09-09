@@ -1,6 +1,7 @@
 <?php
 
 namespace aminkt\userAccounting;
+use aminkt\userAccounting\controllers\panel\DefaultController;
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 
 /**
@@ -35,5 +36,8 @@ class UserAccounting extends \yii\base\Module
             throw new InvalidArgumentException("Transaction model not defined");
 
         \Yii::configure($this, require( __DIR__.DIRECTORY_SEPARATOR.'config.php'));
+        $this->controllerMap = [
+            'account'=>DefaultController::className(),
+        ];
     }
 }

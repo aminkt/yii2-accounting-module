@@ -26,6 +26,8 @@ use yii\db\ActiveRecord;
  */
 class Account extends ActiveRecord implements AccountInterface
 {
+    const SCENARIO_UPDATE = 'update';
+
     /**
      * @inheritdoc
      */
@@ -55,7 +57,7 @@ class Account extends ActiveRecord implements AccountInterface
     public function rules()
     {
         return [
-            [['userId', 'status', 'bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'required'],
+            [['userId', 'status', 'bankName', 'cardNumber', 'shaba', 'owner'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
@@ -77,9 +79,20 @@ class Account extends ActiveRecord implements AccountInterface
             'owner' => 'صاحب حساب',
             'amountPaid' => 'مبلغ واریز شده (تومان)',
             'status' => 'وضعیت',
+            'operatorNote'=>'یادداشت اپراتور',
             'updateTime' => 'Update Time',
             'createTime' => 'Create Time',
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_UPDATE] = ['bankName', 'cardNumber', 'accountNumber','shaba','owner','status','operatorNote'];
+        return $scenarios;
     }
 
     /**

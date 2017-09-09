@@ -5,14 +5,15 @@
  * Date: 8/27/17
  * Time: 2:49 PM
  */
+
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model aminkt\userAccounting\models\Account */
 $this->title = 'ثبت حساب بانکی';
 $this->params['des'] = 'از این بخش میتوانید حساب های جدیدی را ایجاد کنید';
-$this->params['breadcrumbs'][] = ['label' => 'امورمالی', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => 'حساب بانکی', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'امورمالی', 'url' => ['/userAccounting']];
+$this->params['breadcrumbs'][] = ['label' => 'حساب بانکی', 'url' => ['/userAccounting/account/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="portlet light form-fit ">

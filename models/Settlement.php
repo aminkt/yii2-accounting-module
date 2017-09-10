@@ -2,8 +2,13 @@
 
 namespace aminkt\userAccounting\models;
 
+use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
+use aminkt\userAccounting\interfaces\TransactionInterface;
+use aminkt\userAccounting\UserAccounting;
+use userAccounting\components\SettlementEvent;
+use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -81,7 +86,7 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
             'amount' => 'مبلغ',
             'bankTrackingCode' => 'کدپیگیری تراکنش',
             'status' => 'وضعیت',
-            'payTime' => 'زمان تراکنش',
+            'settlementTime' => 'زمان تراکنش',
             'updateTime' => 'Update Time',
             'createTime' => 'زمان درخواست',
         ];
@@ -117,16 +122,38 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
      */
     public static function createSettlementRequest($amount, $purse, $account, $description = null, $type = Settlement::TYPE_SHABA)
     {
+        if (!is_double($amount) or !is_float($amount) or !is_integer($amount))
+            throw new InvalidArgumentException("Amount is not valid.");
+
+        $max = UserAccounting::getInstance()->maxSettlementAmount;
+        $min = UserAccounting::getInstance()->minSettlementAmount;
+        if ($amount <= 0 or $amount < $min)
+            throw new InvalidArgumentException("Amount is so small.");
+
+        if ($max and $amount > $max)
+            throw new InvalidArgumentException("Amount is so huge.");
+
+        $accountId = is_integer($account) ? $account : $account->getId();
+
         $settlement = new Settlement();
         $settlement->amount = $amount;
-        $settlement->userId = $purse->userId;
-        $settlement->purseId = $purse->id;
-        $settlement->accountId = $account->id;
+        $settlement->userId = $purse->getUserId();
+        $settlement->purseId = $purse->getId();
+        $settlement->accountId = $accountId;
         $settlement->description = $description;
         $settlement->settlementType = $type;
         $settlement->status = self::STATUS_WAITING;
-        if ($settlement->save())
+        if ($settlement->save()) {
+            $event = new SettlementEvent();
+            $event->setSettlement($settlement);
+            Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_SETTLEMENT_CREATE, $event);
+
+            /** @var TransactionInterface $transactionModel */
+            $transactionModel = UserAccounting::getInstance()->transactionModel;
+            $transactionModel::withdraw($amount, $purse, 'برداشت بابت تسویه حساب', TransactionInterface::TYPE_SETTLEMENT_REQUEST_WITHDRAW);
+
             return $settlement;
+        }
 
         \Yii::error($settlement->getErrors(), self::className());
         throw new RuntimeException("Settlement has error in creation action.");
@@ -150,6 +177,10 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
             \Yii::error($this->getErrors(), self::class);
             throw new RuntimeException("Settlement blocking become failed");
         }
+
+        $event = new SettlementEvent();
+        $event->setSettlement($this);
+        Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_SETTLEMENT_BLOCK, $event);
     }
 
     /**
@@ -171,6 +202,10 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
             \Yii::error($this->getErrors(), self::class);
             throw new RuntimeException("Settlement confirmation become failed");
         }
+
+        $event = new SettlementEvent();
+        $event->setSettlement($this);
+        Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_SETTLEMENT_CONFIRM, $event);
     }
 
     /**
@@ -191,6 +226,14 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
             \Yii::error($this->getErrors(), self::class);
             throw new RuntimeException("Settlement rejection become failed");
         }
+
+        /** @var TransactionInterface $transactionModel */
+        $transactionModel = UserAccounting::getInstance()->transactionModel;
+        $transactionModel::deposit($this->amount, $this->purse, 'واریز بابت رد درخواست تسویه حساب', TransactionInterface::TYPE_SETTLEMENT_REQUEST_REJECTED);
+
+        $event = new SettlementEvent();
+        $event->setSettlement($this);
+        Yii::$app->trigger(\aminkt\userAccounting\UserAccounting::EVENT_SETTLEMENT_REJECT, $event);
     }
 
     /**

@@ -199,4 +199,9 @@ class Account extends ActiveRecord implements AccountInterface
         $q->createCommand()->update(self::tableName(), ['userId' => $toUser], ['userId' => $fromUser])->execute();
         return true;
     }
+
+    public function getId()
+    {
+        return $this->getId();
+    }
 }

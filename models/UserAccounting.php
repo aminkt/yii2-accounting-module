@@ -3,7 +3,9 @@
 namespace aminkt\userAccounting\models;
 
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
+use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\AccountingInterface;
+use aminkt\userAccounting\interfaces\PurseInterface;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -266,5 +268,54 @@ class UserAccounting extends ActiveRecord implements AccountingInterface
             $model::migrate($from, $to);
         }
         return true;
+    }
+
+    /**
+     * Return default purse object of selected user.
+     *
+     * @param integer|\yii\web\IdentityInterface $user
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException When user not defined or not correct.
+     *
+     * @return PurseInterface
+     */
+    public static function getDefaultPurse($user)
+    {
+        $userId = is_integer($user) ? $user : static::getUser($user)->getId();
+        $model = self::findOne(['userId' => $userId, 'meta' => self::META_DEFAULT_PURSE]);
+        if (!$model)
+            throw new InvalidArgumentException("Purse not found for defined user.");
+        $purse = Purse::findOne($model->value);
+        if (!$purse)
+            throw new RuntimeException("Purse is not exist but information are saved before and not updated.");
+
+        return $purse;
+    }
+
+    /**
+     * Set default purse as defined purse for selected user.
+     *
+     * @param integer|\yii\web\IdentityInterface $user
+     * @param integer|PurseInterface $purse
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException When user or purse not defined or not correct.
+     *
+     * @return void
+     */
+    public static function setDefaultPurse($user, $purse)
+    {
+        $userId = is_integer($user) ? $user : static::getUser($user)->getId();
+        $purseId = is_integer($purse) ? $purse : $purse->getId();
+
+        $model = self::findOne(['userId' => $userId, 'meta' => self::META_DEFAULT_PURSE]);
+        if (!$model) {
+            $model = new self();
+            $model->userId = $userId;
+            $model->meta = self::META_DEFAULT_PURSE;
+        }
+        $model->value = $purseId;
+        $model->save(false);
     }
 }

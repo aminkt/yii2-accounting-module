@@ -1,5 +1,6 @@
 <?php
-namespace userAccounting\components;
+
+namespace aminkt\userAccounting\components;
 
 use yii\base\Event;
 

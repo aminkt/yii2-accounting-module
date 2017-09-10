@@ -2,11 +2,11 @@
 
 namespace aminkt\userAccounting\models;
 
+use aminkt\userAccounting\components\TransactionEvent;
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\PurseInterface;
 use aminkt\userAccounting\interfaces\TransactionInterface;
-use userAccounting\components\TransactionEvent;
 use Yii;
 use yii\db\Query;
 
@@ -138,6 +138,15 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
             /** @var TransactionInterface $transactionModelName */
             $transactionModelName = \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel;
             $transactionModelName::deposit($amount, $this, $description, TransactionInterface::TYPE_NORMAL);
+
+            if ($this->autoSettlement and $this->accountId) {
+                $settlementAmount = $this->getAmount();
+                try {
+                    Settlement::createSettlementRequest($settlementAmount, $this, $this->accountId, 'تسویه حساب خودکار');
+                } catch (InvalidArgumentException $exception) {
+                    Yii::warning("Settlement request amount is not valid. Amount was $settlementAmount", self::className());
+                }
+            }
         } catch (\Exception $e) {
             throw $e;
         } catch (\Throwable $e) {
@@ -320,9 +329,10 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
                 'name' => $purse->name
             ]);
             if ($same) {
-                $purse->name .= '- همگام شده';
-                $purse->description = 'این کیف پول از حساب قبلی شما همگام شده است. در صورت تمایل آن را حذف کنید.';
-                $purse->save(false);
+                /** @var \aminkt\userAccounting\interfaces\TransactionInterface $model */
+                $model = \aminkt\userAccounting\UserAccounting::getInstance()->transactionModel;
+                $q->createCommand()->update($model::tableName(), ['userId' => $toUser, 'purseId' => $same->id], ['userId' => $fromUser, 'purseId' => $purse->id])->execute();
+                $purse->delete();
             }
         }
         $q->createCommand()->update(self::tableName(), ['userId' => $toUser], ['userId' => $fromUser])->execute();

@@ -3,11 +3,9 @@ namespace aminkt\userAccounting\components;
 
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\models\Purse;
-use aminkt\userAccounting\models\Settlement;
 use aminkt\userAccounting\models\Transaction;
 use aminkt\userAccounting\models\UserAccounting;
 use yii\base\Component;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
@@ -144,6 +142,7 @@ class Account extends Component
     public static function initializeNewAccount($user, $purseName = 'Default', $purseDescription = 'Default purse of user.')
     {
         $purse = UserAccounting::createPurse($user, $purseName, $purseDescription);
+        UserAccounting::setDefaultPurse($user, $purse);
         if ($purse)
             return true;
         return false;

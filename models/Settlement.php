@@ -122,7 +122,7 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
      */
     public static function createSettlementRequest($amount, $purse, $account, $description = null, $type = Settlement::TYPE_SHABA)
     {
-        if (!is_double($amount) or !is_float($amount) or !is_integer($amount))
+        if (!is_double($amount) and !is_float($amount) and !is_integer($amount))
             throw new InvalidArgumentException("Amount is not valid.");
 
         $max = UserAccounting::getInstance()->maxSettlementAmount;

@@ -65,7 +65,7 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
     {
         return [
             [['userId', 'accountId', 'status', 'amount'], 'required'],
-            [['userId', 'accountId', 'status', 'settlementType', 'payTime', 'updateTime', 'createTime'], 'integer'],
+            [['userId', 'accountId', 'status', 'settlementType', 'settlementTime', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
             [['amount'], 'number'],
             [['bankTrackingCode'], 'string', 'max' => 255],

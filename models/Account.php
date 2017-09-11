@@ -204,4 +204,14 @@ class Account extends ActiveRecord implements AccountInterface
     {
         return $this->getId();
     }
+
+    /**
+     * Find account by userId.
+     * @param integer $userId
+     * @return static[]
+     */
+    public static function findByUserId($userId)
+    {
+        return static::findAll(['userId' => $userId, 'status' => self::STATUS_CONFIRMED]);
+    }
 }

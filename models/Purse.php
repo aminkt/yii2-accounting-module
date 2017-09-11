@@ -348,4 +348,14 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     {
         return $this->userId;
     }
+
+    /**
+     * Find purse by userId.
+     * @param integer $userId
+     * @return static[]
+     */
+    public static function findByUserId($userId)
+    {
+        return static::findAll(['userId' => $userId, 'status' => self::STATUS_CONFIRMED]);
+    }
 }

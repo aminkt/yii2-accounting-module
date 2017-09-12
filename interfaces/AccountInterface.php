@@ -18,6 +18,12 @@ interface AccountInterface extends UserAccountingInterface
     /** Settlement request status */
     const STATUS_REMOVED = 4;
 
+    /**
+     * Return id of account model.
+     *
+     * @return integer
+     */
+    public function getId();
 
     /**
      * Create a bank account.

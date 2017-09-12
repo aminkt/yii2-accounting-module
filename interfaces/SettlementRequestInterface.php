@@ -29,12 +29,13 @@ interface SettlementRequestInterface extends UserAccountingInterface
      * Create a settlement request from selected purse to selected account.
      *
      * @param float $amount
-     * @param PurseInterface $purse
-     * @param AccountInterface $account
+     * @param PurseInterface $purse Purse model
+     * @param AccountInterface|integer $account Account model or database id.
      * @param string|null $description
      * @param int $type
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException Throw if amount is not valid.
      *
      * @return SettlementRequestInterface
      */

@@ -40,7 +40,7 @@ interface TransactionInterface extends UserAccountingInterface
     public static function deposit($amount, $purse, $description, $type);
 
     /**
-     * Deposit amount to defined purse.
+     * Withdraw amount to defined purse.
      *
      * @param double $amount
      * @param \aminkt\userAccounting\interfaces\PurseInterface $purse

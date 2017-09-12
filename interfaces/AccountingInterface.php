@@ -10,6 +10,8 @@ namespace aminkt\userAccounting\interfaces;
  */
 interface AccountingInterface extends UserAccountingInterface
 {
+    const META_DEFAULT_PURSE = 'default_purse';
+
     /**
      * Return a accounting model.
      *
@@ -220,4 +222,29 @@ interface AccountingInterface extends UserAccountingInterface
      * @return void
      */
     public static function removeAccount($account, $force = false);
+
+    /**
+     * Return default purse object of selected user.
+     *
+     * @param integer|\yii\web\IdentityInterface $user
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException When user not defined or not correct.
+     *
+     * @return void
+     */
+    public static function getDefaultPurse($user);
+
+    /**
+     * Set default purse as defined purse for selected user.
+     *
+     * @param integer|\yii\web\IdentityInterface $user
+     * @param integer|PurseInterface $purse
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException When user or purse not defined or not correct.
+     *
+     * @return void
+     */
+    public static function setDefaultPurse($user, $purse);
 }

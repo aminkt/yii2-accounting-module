@@ -7,7 +7,7 @@ use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
 use aminkt\userAccounting\interfaces\TransactionInterface;
 use aminkt\userAccounting\UserAccounting;
-use userAccounting\components\SettlementEvent;
+use aminkt\userAccounting\components\SettlementEvent;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;

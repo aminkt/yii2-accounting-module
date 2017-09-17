@@ -15,10 +15,12 @@ use aminkt\userAccounting\models\Settlement;
 use common\widgets\alert\Alert;
 use aminkt\userAccounting\models\SettlementRequestForm;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use Yii;
+use yii\web\NotAcceptableHttpException;
 
 class SettlementController extends Controller
 {
@@ -56,12 +58,18 @@ class SettlementController extends Controller
             ])
         ]);
         if ($settlementRequestForm->load(Yii::$app->request->post())) {
-            if ($settlementRequestForm->regPayRequest()) {
-                Alert::success('درخواست تسویه حساب برای شما با موفقیت ثبت شد', 'درخواست تسویه حساب برای شما منتظر تائید است.');
-            } else {
-                $errors = $settlementRequestForm->errors;
-                \Yii::error($errors);
-                Alert::error('اطلاعات ذخیره نشد.', 'متاسفانه در ثبت اطلاعات مشکلی وجود دارد.');
+            $account = Account::findOne($settlementRequestForm->account);
+            $purse = Purse::findOne($settlementRequestForm->purse);
+            if ($account && $purse && $account->userId == $userId && $purse->userId == $userId) {
+                $settlementRequestForm->account = $account->id;
+                $settlementRequestForm->purse = $purse->id;
+                if ($settlementRequestForm->regPayRequest()) {
+                    Alert::success('درخواست تسویه حساب برای شما با موفقیت ثبت شد', 'درخواست تسویه حساب برای شما منتظر تائید است.');
+                } else {
+                    $errors = $settlementRequestForm->errors;
+                    \Yii::error($errors);
+                    Alert::error('اطلاعات ذخیره نشد.', 'متاسفانه در ثبت اطلاعات مشکلی وجود دارد.');
+                }
             }
         }
         return $this->render('/panel/settlement/create', [
@@ -70,10 +78,5 @@ class SettlementController extends Controller
             'purses' => $purses,
             'dataProvider' => $dataProvider
         ]);
-    }
-
-    public function actionIndex()
-    {
-        return $this->render('/panel/settlement/index');
     }
 }

@@ -59,7 +59,10 @@ class SettlementRequestForm extends Model
     {
         if($this->validate()){
             try {
-                $settlement = UserAccounting::settlementRequest($this->amount, $this->purse, $this->account, $this->description, $this->type);
+                $purse = Purse::findOne($this->purse);
+                if(!$purse)
+                    throw new InvalidArgumentException("Purse not found.");
+                $settlement = UserAccounting::settlementRequest(floatval($this->amount), $purse, $this->account, $this->description, $this->type);
                 return true;
             } catch (RuntimeException $exception) {
                 return false;

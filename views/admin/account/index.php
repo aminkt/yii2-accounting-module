@@ -6,12 +6,12 @@
  * Time: 8:36 PM
  */
 
-use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $model aminkt\userAccounting\models\Account */
+/* @var $model \aminkt\userAccounting\models\Account */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 $this->title = 'لیست حساب های کاربران';
 $this->params['des'] = 'از این بخش میتوانید حساب های خود را مدیریت کنید';
@@ -44,17 +44,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'status',
                         'format' => 'raw',
                         'value' => function ($model) {
-                            /** @var $model \userAccounting\models\Account */
+                            /** @var $model \aminkt\userAccounting\models\Account */
                             if ($model->status == $model::STATUS_WAITING)
                                 return 'در انتظار تائید';
                             elseif ($model->status == $model::STATUS_CONFIRMED)
                                 return 'تائید شده';
                             elseif ($model->status == $model::STATUS_BLOCKED)
                                 return 'مسدود شده';
-                            elseif ($model->status == $model::STATUS_DEACTIVATE)
-                                return 'غیرفعال';
-                            elseif ($model->status == $model::STATUS_REJECTED)
-                                return 'عدم احراز صلاحیت';
+                            elseif ($model->status == $model::STATUS_REMOVED)
+                                return 'حذف شده';
 
                             return null;
                         }
@@ -68,23 +66,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
                 'rowOptions' => function ($model, $key, $index, $grid) {
+                    /** @var $model \aminkt\userAccounting\models\Account */
                     if ($model->status == $model::STATUS_WAITING)
                         return [
                             'class' => 'warning'
                         ];
-                    elseif ($model->status == $model::STATUS_CONFIRMED)
-                        return [
-                            'class' => 'success'
-                        ];
                     elseif ($model->status == $model::STATUS_BLOCKED)
-                        return [
-                            'class' => 'warning'
-                        ];
-                    elseif ($model->status == $model::STATUS_DEACTIVATE)
                         return [
                             'class' => 'danger'
                         ];
-                    elseif ($model->status == $model::STATUS_REJECTED)
+                    elseif ($model->status == $model::STATUS_REMOVED)
                         return [
                             'class' => 'danger'
                         ];

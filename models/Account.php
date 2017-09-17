@@ -57,7 +57,7 @@ class Account extends ActiveRecord implements AccountInterface
     public function rules()
     {
         return [
-            [['userId', 'status', 'bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'required'],
+            [['userId', 'status', 'bankName', 'cardNumber', 'shaba', 'owner'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
@@ -121,29 +121,6 @@ class Account extends ActiveRecord implements AccountInterface
 
         \Yii::error($account->getErrors(), self::class);
         throw new RuntimeException("Account model creation become failed");
-    }
-
-    /**
-     * Update Account information.
-     * @param Account $model Model of account.
-     * @param Account $updatedModel UpdatedModel of account.
-     * @return bool|Account
-     */
-    public static function updateAccount($model ,$updatedModel)
-    {
-        $model->bankName = $updatedModel->bankName;
-        $model->cardNumber = $updatedModel->cardNumber;
-        $model->accountNumber = $updatedModel->accountNumber;
-        $model->shaba = $updatedModel->shaba;
-        $model->owner = $updatedModel->owner;
-        $model->status = $updatedModel->status;
-        $model->operatorNote = $updatedModel->operatorNote;
-        if ($model->save()) {
-            return $model;
-        } else {
-            \Yii::error($model->getErrors(), self::className());
-        }
-        return false;
     }
 
     /**

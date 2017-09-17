@@ -44,7 +44,7 @@ class AccountController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Account::find()->where([
                 'userId' => \Yii::$app->getUser()->getId()
-            ])
+            ])->andWhere(['!=', 'status', Account::STATUS_REMOVED])
         ]);
         return $this->render('/panel/account/index', [
             'dataProvider' => $dataProvider

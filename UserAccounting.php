@@ -1,6 +1,7 @@
 <?php
 
 namespace aminkt\userAccounting;
+
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 
 /**

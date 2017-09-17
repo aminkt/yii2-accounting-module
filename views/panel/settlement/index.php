@@ -15,26 +15,13 @@ use \aminkt\userAccounting\models\Settlement;
 ?>
 
 <div class="portlet light portlet-fit ">
-    <div class="portlet-title">
-        <div class="caption">
-            <span class="caption-subject font-blue-madison bold uppercase"><?= Html::encode($this->title) ?></span>
-        </div>
-    </div>
     <div class="portlet-body">
-        <div class="table-toolbar">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="btn-group">
-                        <?= Html::a('ایجاد حساب <i class="fa fa-plus"></i>', ['account/create'], ['class' => 'btn green']) ?>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="table-responsive">
             <?php Pjax::begin(); ?>
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
                     [
                         'attribute' => 'account',
                         'format' => 'raw',
@@ -53,27 +40,17 @@ use \aminkt\userAccounting\models\Settlement;
                     ],
                     [
                         'attribute' => 'status',
-                        'format' => 'raw',
-                        'value' => function ($model) {
-                            if ($model->status == Settlement::STATUS_WAITING)
-                                return 'در انتظار تائید';
-                            elseif ($model->status == Settlement::STATUS_CONFIRMED)
-                                return 'تائید شده';
-                            elseif ($model->status == Settlement::STATUS_REMOVED)
-                                return 'حذف شده';
-                            elseif ($model->status == Settlement::STATUS_BLOCKED)
-                                return 'مسدود شده';
-                            elseif ($model->status == Settlement::STATUS_REJECTTED)
-                                return 'عدم احراز صلاحیت';
-                            return null;
-                        }
+                        'value' => 'statusLabel',
                     ],
-                    'settlementType',
-                    'description',
-                    'operatorNote',
-                    'settlementTime',
-                    'createTime',
-                    'updateTime',
+                    [
+                        'attribute' => 'settlementType',
+                        'value' => 'settlementTypeLabel',
+                    ],
+                    'settlementTime:datetime',
+                    'createTime:datetime',
+                    'updateTime:datetime',
+                    'operatorNote:ntext',
+                    'description:ntext',
                 ],
                 'rowOptions' => function ($model, $key, $index, $grid) {
                     if ($model->status == Settlement::STATUS_WAITING)

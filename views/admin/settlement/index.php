@@ -2,20 +2,36 @@
 /**
  * Created by PhpStorm.
  * User: winkers
- * Date: 9/6/17
- * Time: 1:36 PM
+ * Date: 9/18/17
+ * Time: 3:55 PM
  */
+
+use \aminkt\userAccounting\models\Settlement;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
-use yii\grid\GridView;
-use \aminkt\userAccounting\models\Settlement;
 
 /* @var $this yii\web\View */
+/* @var $model \aminkt\userAccounting\models\Settlement */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+$this->title = 'درخواست های تسویه حساب کاربران';
+$this->params['des'] = 'از این بخش میتوانید درخواست های تسویه حساب کاربران را مدیریت کنید';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="portlet light portlet-fit ">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject font-blue-madison bold uppercase"><?= Html::encode($this->title) ?></span>
+        </div>
+    </div>
     <div class="portlet-body">
+        <div class="table-toolbar">
+            <div class="row">
+                <div class="col-md-6">
+                </div>
+            </div>
+        </div>
         <div class="table-responsive">
             <?php Pjax::begin(); ?>
             <?= GridView::widget([
@@ -52,6 +68,13 @@ use \aminkt\userAccounting\models\Settlement;
                     'updateTime:datetime',
                     'operatorNote:ntext',
                     'description:ntext',
+                    [
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            $buttons = Html::a('<i class="fa fa-pencil"></i>' . ' ویرایش', \yii\helpers\Url::toRoute(['settlement/update', 'id' => $model->id]), ['class' => 'btn green btn-block']);
+                            return $buttons;
+                        },
+                    ],
                 ],
                 'rowOptions' => function ($model, $key, $index, $grid) {
                     if ($model->status == Settlement::STATUS_WAITING)
@@ -83,4 +106,3 @@ use \aminkt\userAccounting\models\Settlement;
 
     </div>
 </div>
-

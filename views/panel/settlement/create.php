@@ -27,24 +27,24 @@ $this->params['breadcrumbs'][] = $this->title;
                         <span class="caption-subject font-blue-madison bold uppercase"><?= Html::encode($this->title) ?></span>
                     </div>
                     <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a aria-expanded="true" href="#tab_1_1" data-toggle="tab">درخواست تسویه حساب</a>
-                        </li>
                         <li class="">
-                            <a aria-expanded="false" href="#tab_1_2" data-toggle="tab">در خواست های تسویه قبلی</a>
+                            <a aria-expanded="false" href="#tab_1_1" data-toggle="tab">درخواست تسویه حساب</a>
+                        </li>
+                        <li class="active">
+                            <a aria-expanded="true" href="#tab_1_2" data-toggle="tab">در خواست های تسویه قبلی</a>
                         </li>
                     </ul>
                 </div>
                 <div class="portlet-body">
                     <div class="tab-content">
-                        <div class="tab-pane active" id="tab_1_1">
+                        <div class="tab-pane" id="tab_1_1">
                             <?= Yii::$app->controller->renderPartial('/panel/settlement/_form', [
                                 'model' => $settlementRequestForm,
                                 'accounts' => $accounts,
                                 'purses' => $purses
                             ]); ?>
                         </div>
-                        <div class="tab-pane" id="tab_1_2">
+                        <div class="tab-pane active" id="tab_1_2">
                             <?= Yii::$app->controller->renderPartial('/panel/settlement/index', [
                                 'dataProvider' => $dataProvider
                             ]); ?>

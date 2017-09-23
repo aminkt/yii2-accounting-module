@@ -46,7 +46,7 @@ class SettlementController extends Controller
      * Create and list Settlement model.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($tab = "tab_1_2")
     {
         $settlementRequestForm = new SettlementRequestForm();
         $userId = \Yii::$app->getUser()->getIdentity()->getId();
@@ -76,7 +76,8 @@ class SettlementController extends Controller
             'settlementRequestForm' => $settlementRequestForm,
             'accounts' => $accounts,
             'purses' => $purses,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'tab' => $tab
         ]);
     }
 }

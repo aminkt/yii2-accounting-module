@@ -18,6 +18,9 @@ interface PurseInterface extends UserAccountingInterface
     /** Settlement request status */
     const STATUS_REMOVED = 4;
 
+    const AUTO_SETTLEMENT_ON = 1;
+    const AUTO_SETTLEMENT_OFF = 0;
+
     /**
      * Return purse id.
      *

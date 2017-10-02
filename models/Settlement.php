@@ -2,12 +2,12 @@
 
 namespace aminkt\userAccounting\models;
 
+use aminkt\userAccounting\components\SettlementEvent;
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
 use aminkt\userAccounting\interfaces\TransactionInterface;
 use aminkt\userAccounting\UserAccounting;
-use aminkt\userAccounting\components\SettlementEvent;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -95,6 +95,25 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
             'account' => 'حساب',
             'purse' => 'کیف پول',
         ];
+    }
+
+    /**
+     * Delete Settlement request object by changing status to removed.
+     *
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->beforeDelete()) {
+            $this->status = self::STATUS_REMOVED;
+            if ($this->save(false)) {
+                $this->afterDelete();
+                return true;
+            }
+            \Yii::error($this->getErrors(), self::className());
+            throw new \RuntimeException("Can not delete purse.");
+        }
+        return false;
     }
 
     /**

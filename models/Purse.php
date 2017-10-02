@@ -4,10 +4,13 @@ namespace aminkt\userAccounting\models;
 
 use aminkt\userAccounting\components\TransactionEvent;
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
+use aminkt\userAccounting\exceptions\RiskException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\PurseInterface;
 use aminkt\userAccounting\interfaces\TransactionInterface;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\db\Query;
 
 /**
@@ -34,6 +37,21 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     public static function tableName()
     {
         return '{{%user_accounting_purses}}';
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['createTime', 'updateTime'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updateTime'],
+                ],
+                // if you're using datetime instead of UNIX timestamp:
+                // 'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
 
@@ -107,6 +125,31 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
             'updateTime' => 'Update Time',
             'createTime' => 'Create Time',
         ];
+    }
+
+    /**
+     * Delete purse object by changing status to removed.
+     *
+     * @throws RiskException
+     *
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->getAmount() > 0) {
+            throw new RiskException("Purse is not empty so you can not delete this purse.");
+        }
+
+        if ($this->beforeDelete()) {
+            $this->status = self::STATUS_REMOVED;
+            if ($this->save(false)) {
+                $this->afterDelete();
+                return true;
+            }
+            Yii::error($this->getErrors(), self::className());
+            throw new \RuntimeException("Can not delete purse.");
+        }
+        return false;
     }
 
     /**

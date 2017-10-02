@@ -21,4 +21,11 @@ interface UserAccountingInterface
      * @return bool
      */
     public static function migrate($fromUser, $toUser);
+
+    /**
+     * Delete object (Purse, Account or Settlement request)
+     *
+     * @return boolean
+     */
+    public function delete();
 }

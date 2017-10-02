@@ -57,7 +57,7 @@ class Account extends ActiveRecord implements AccountInterface
     public function rules()
     {
         return [
-            [['userId', 'status', 'bankName', 'cardNumber', 'shaba', 'owner'], 'required'],
+            [['userId', 'status', 'bankName', 'shaba'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
@@ -93,6 +93,25 @@ class Account extends ActiveRecord implements AccountInterface
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_UPDATE] = ['bankName', 'cardNumber', 'accountNumber','shaba','owner','status','operatorNote'];
         return $scenarios;
+    }
+
+    /**
+     * Delete Account object by changing status to removed.
+     *
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->beforeDelete()) {
+            $this->status = self::STATUS_REMOVED;
+            if ($this->save(false)) {
+                $this->afterDelete();
+                return true;
+            }
+            \Yii::error($this->getErrors(), self::className());
+            throw new \RuntimeException("Can not delete purse.");
+        }
+        return false;
     }
 
     /**

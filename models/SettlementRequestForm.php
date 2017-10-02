@@ -30,7 +30,7 @@ class SettlementRequestForm extends Model
         return [
             // username and password are both required
             [['amount', 'account',], 'required'],
-            [['amount'], 'number', 'min'=>10000],
+            [['amount'], 'number', 'min'=>\aminkt\userAccounting\UserAccounting::getInstance()->minSettlementAmount, 'max'=>\aminkt\userAccounting\UserAccounting::getInstance()->maxSettlementAmount],
             [['account', 'purse', 'type'], 'integer'],
             [['description'], 'string'],
         ];

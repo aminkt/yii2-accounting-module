@@ -46,7 +46,7 @@ class SettlementController extends Controller
      * Create and list Settlement model.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionIndex($action = "list")
     {
         $settlementRequestForm = new SettlementRequestForm();
         $userId = \Yii::$app->getUser()->getIdentity()->getId();
@@ -64,6 +64,7 @@ class SettlementController extends Controller
                 $settlementRequestForm->account = $account->id;
                 $settlementRequestForm->purse = $purse->id;
                 if ($settlementRequestForm->regPayRequest()) {
+                    $action = "list";
                     Alert::success('درخواست تسویه حساب برای شما با موفقیت ثبت شد', 'درخواست تسویه حساب برای شما منتظر تائید است.');
                 } else {
                     $errors = $settlementRequestForm->errors;
@@ -72,11 +73,12 @@ class SettlementController extends Controller
                 }
             }
         }
-        return $this->render('/panel/settlement/create', [
+        return $this->render('/panel/settlement/index', [
             'settlementRequestForm' => $settlementRequestForm,
             'accounts' => $accounts,
             'purses' => $purses,
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'action' => $action
         ]);
     }
 }

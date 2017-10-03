@@ -18,6 +18,9 @@ interface PurseInterface extends UserAccountingInterface
     /** Settlement request status */
     const STATUS_REMOVED = 4;
 
+    const AUTO_SETTLEMENT_ON = 1;
+    const AUTO_SETTLEMENT_OFF = 0;
+
     /**
      * Return purse id.
      *
@@ -44,6 +47,18 @@ interface PurseInterface extends UserAccountingInterface
      * @return PurseInterface
      */
     public static function createPurse($userIdentity, $name, $description = null);
+
+    /**
+     * Edit purse information.
+     *
+     * @param string $name
+     * @param string $description
+     *
+     * @throws \aminkt\userAccounting\exceptions\\RuntimeException Throw if process stop unexpectly.
+     *
+     * @return PurseInterface
+     */
+    public function edit($name = null, $description = null);
 
     /**
      * Return amount of purse.
@@ -110,4 +125,43 @@ interface PurseInterface extends UserAccountingInterface
      * @return void
      */
     public function removePurse($force = false);
+
+    /**
+     * Assign an account to purse.
+     *
+     * @param integer|\aminkt\userAccounting\interfaces\AccountInterface $account Account that should assign to purse.
+     * @param bool $autoSettlement If true auto settlement turned on and if false turned off.
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return \aminkt\userAccounting\interfaces\PurseInterface
+     */
+    public function setAccount($account, $autoSettlement = true);
+
+    /**
+     * Remove assignment of an account from purse.
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return \aminkt\userAccounting\interfaces\PurseInterface
+     */
+    public function removeAccount();
+
+    /**
+     * Set on auto settlement of purse if account was assigned.
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return boolean
+     */
+    public function autoSettlementOn();
+
+    /**
+     * Turn off auto settlement of purse.
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
+     *
+     * @return void
+     */
+    public function autoSettlementOff();
 }

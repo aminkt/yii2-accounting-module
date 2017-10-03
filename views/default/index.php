@@ -37,21 +37,15 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'type',
                             'format' => 'raw',
                             'value' => function ($model) {
-                                /** @var $model \userAccounting\models\Transaction */
-                                if ($model->type == $model::TYPE_PAY_REQUEST)
+                                /** @var $model \aminkt\userAccounting\interfaces\TransactionInterface */
+                                if ($model->getType() == $model::TYPE_SETTLEMENT_REQUEST_WITHDRAW)
                                     return 'درخواست تسویه';
-                                elseif ($model->type == $model::TYPE_GIFT)
-                                    return 'هدیه';
-                                elseif ($model->type == $model::TYPE_BUY)
-                                    return 'خرید';
-                                elseif ($model->type == $model::TYPE_CHARGE_ACCOUNT)
-                                    return 'شارژ حساب کاربری';
-                                elseif ($model->type == $model::TYPE_REJECT_PAY_REQUEST)
+                                elseif ($model->getType() == $model::TYPE_SETTLEMENT_REQUEST_REJECTED)
                                     return 'رد درخواست تسویه';
-                                elseif ($model->type == $model::TYPE_SALE)
-                                    return 'فروش';
-                                elseif ($model->type == $model::TYPE_UNKNOWN)
-                                    return 'نا مشخص';
+                                elseif ($model->getType() == $model::TYPE_GIFT)
+                                    return 'هدیه';
+                                elseif ($model->getType() == $model::TYPE_NORMAL)
+                                    return 'عادی';
 
                                 return null;
                             }
@@ -59,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'attribute'=>'time',
                             'value'=>function($model){
-                                /** @var $model \userAccounting\models\Transaction */
+                                /** @var $model \aminkt\userAccounting\models\Transaction */
                                 $formatter = Yii::$app->formatter;
                                 return $formatter->asDatetime($model->time, 'dd MMMM YY ساعت hh:mm');
                             }

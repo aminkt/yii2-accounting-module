@@ -42,6 +42,21 @@ interface AccountInterface extends UserAccountingInterface
     public static function createAccount($userIdentity, $bankName = null, $owner = null, $cardNumber = null, $shaba = null, $accountNumber = null);
 
     /**
+     * Edit current bank account.
+     *
+     * @param string|null $bankName Account bank name.
+     * @param string|null $owner Account owner name
+     * @param string|null $cardNumber Account card number
+     * @param string|null $shaba Account Shaba number
+     * @param string|null $accountNumber Account nummber
+     *
+     * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectly.
+     *
+     * @return AccountInterface
+     */
+    public function edit($bankName = null, $owner = null, $cardNumber = null, $shaba = null, $accountNumber = null);
+
+    /**
      * Confirm an account.
      *
      * @param string|null $note

@@ -2,12 +2,12 @@
 
 namespace aminkt\userAccounting\models;
 
+use aminkt\userAccounting\components\SettlementEvent;
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
 use aminkt\userAccounting\interfaces\TransactionInterface;
 use aminkt\userAccounting\UserAccounting;
-use userAccounting\components\SettlementEvent;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -65,7 +65,7 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
     {
         return [
             [['userId', 'accountId', 'status', 'amount'], 'required'],
-            [['userId', 'accountId', 'status', 'settlementType', 'payTime', 'updateTime', 'createTime'], 'integer'],
+            [['userId', 'accountId', 'status', 'settlementType', 'settlementTime', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
             [['amount'], 'number'],
             [['bankTrackingCode'], 'string', 'max' => 255],
@@ -83,13 +83,37 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
             'userId' => 'User ID',
             'accountId' => 'Account ID',
             'accountName' => 'حساب',
-            'amount' => 'مبلغ',
+            'amount' => 'مبلغ (تومان)',
             'bankTrackingCode' => 'کدپیگیری تراکنش',
             'status' => 'وضعیت',
             'settlementTime' => 'زمان تراکنش',
-            'updateTime' => 'Update Time',
+            'updateTime' => 'آخرین زمان ویرایش',
             'createTime' => 'زمان درخواست',
+            'settlementType' => 'شکل تسویه حساب',
+            'operatorNote'=>'یادداشت اپراتور',
+            'description' => 'توضیحات درخواست تسویه',
+            'account' => 'حساب',
+            'purse' => 'کیف پول',
         ];
+    }
+
+    /**
+     * Delete Settlement request object by changing status to removed.
+     *
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->beforeDelete()) {
+            $this->status = self::STATUS_REMOVED;
+            if ($this->save(false)) {
+                $this->afterDelete();
+                return true;
+            }
+            \Yii::error($this->getErrors(), self::className());
+            throw new \RuntimeException("Can not delete purse.");
+        }
+        return false;
     }
 
     /**
@@ -250,5 +274,46 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
         $q = new \yii\db\Query();
         $q->createCommand()->update(self::tableName(), ['userId' => $toUser], ['userId' => $fromUser])->execute();
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSettlementTypeList()
+    {
+        return [
+            self::TYPE_CART_TO_CART => 'کارت به کارت',
+            self::TYPE_SHABA => 'شماره شبا'
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getSettlementTypeLabel()
+    {
+        return self::getSettlementTypeList()[$this->settlementType];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatusList()
+    {
+        return [
+            self::STATUS_WAITING => 'در انتظار تائید',
+            self::STATUS_CONFIRMED => 'تائید شده',
+            self::STATUS_REJECTTED => 'عدم احراز صلاحیت',
+            self::STATUS_BLOCKED => 'مسدود شده',
+            self::STATUS_REMOVED => 'حذف شده'
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusLabel()
+    {
+        return self::getStatusList()[$this->status];
     }
 }

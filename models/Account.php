@@ -57,7 +57,7 @@ class Account extends ActiveRecord implements AccountInterface
     public function rules()
     {
         return [
-            [['userId', 'status', 'bankName', 'cardNumber', 'shaba', 'owner'], 'required'],
+            [['userId', 'status', 'bankName', 'shaba'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
@@ -96,6 +96,25 @@ class Account extends ActiveRecord implements AccountInterface
     }
 
     /**
+     * Delete Account object by changing status to removed.
+     *
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->beforeDelete()) {
+            $this->status = self::STATUS_REMOVED;
+            if ($this->save(false)) {
+                $this->afterDelete();
+                return true;
+            }
+            \Yii::error($this->getErrors(), self::className());
+            throw new \RuntimeException("Can not delete purse.");
+        }
+        return false;
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getSettlements()
@@ -121,6 +140,36 @@ class Account extends ActiveRecord implements AccountInterface
 
         \Yii::error($account->getErrors(), self::class);
         throw new RuntimeException("Account model creation become failed");
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function edit($bankName = null, $owner = null, $cardNumber = null, $shaba = null, $accountNumber = null)
+    {
+
+        if ($bankName)
+            $this->bankName = $bankName;
+
+        if ($owner)
+            $this->owner = $owner;
+
+        if ($cardNumber)
+            $this->cardNumber = $cardNumber;
+
+        if ($shaba)
+            $this->shaba = $shaba;
+
+        if ($accountNumber)
+            $this->accountNumber = $accountNumber;
+
+
+        $this->status = self::STATUS_WAITING;
+        if ($this->save())
+            return $this;
+
+        \Yii::error($this->getErrors(), self::class);
+        throw new RuntimeException("Account model edit become failed");
     }
 
     /**
@@ -180,5 +229,15 @@ class Account extends ActiveRecord implements AccountInterface
     public function getId()
     {
         return $this->getId();
+    }
+
+    /**
+     * Find account by userId.
+     * @param integer $userId
+     * @return static[]
+     */
+    public static function findByUserId($userId)
+    {
+        return static::findAll(['userId' => $userId, 'status' => self::STATUS_CONFIRMED]);
     }
 }

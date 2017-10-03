@@ -30,7 +30,7 @@ class SettlementRequestForm extends Model
         return [
             // username and password are both required
             [['amount', 'account',], 'required'],
-            [['amount'], 'number', 'min'=>10000],
+            [['amount'], 'number', 'min'=>\aminkt\userAccounting\UserAccounting::getInstance()->minSettlementAmount, 'max'=>\aminkt\userAccounting\UserAccounting::getInstance()->maxSettlementAmount],
             [['account', 'purse', 'type'], 'integer'],
             [['description'], 'string'],
         ];
@@ -59,7 +59,10 @@ class SettlementRequestForm extends Model
     {
         if($this->validate()){
             try {
-                $settlement = UserAccounting::settlementRequest($this->amount, $this->purse, $this->account, $this->description, $this->type);
+                $purse = Purse::findOne($this->purse);
+                if(!$purse)
+                    throw new InvalidArgumentException("Purse not found.");
+                $settlement = UserAccounting::settlementRequest(floatval($this->amount), $purse, $this->account, $this->description, $this->type);
                 return true;
             } catch (RuntimeException $exception) {
                 return false;

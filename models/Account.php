@@ -145,6 +145,36 @@ class Account extends ActiveRecord implements AccountInterface
     /**
      * @inheritdoc
      */
+    public function edit($bankName = null, $owner = null, $cardNumber = null, $shaba = null, $accountNumber = null)
+    {
+
+        if ($bankName)
+            $this->bankName = $bankName;
+
+        if ($owner)
+            $this->owner = $owner;
+
+        if ($cardNumber)
+            $this->cardNumber = $cardNumber;
+
+        if ($shaba)
+            $this->shaba = $shaba;
+
+        if ($accountNumber)
+            $this->accountNumber = $accountNumber;
+
+
+        $this->status = self::STATUS_WAITING;
+        if ($this->save())
+            return $this;
+
+        \Yii::error($this->getErrors(), self::class);
+        throw new RuntimeException("Account model edit become failed");
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function confirmAccount($note = null)
     {
         $this->operatorNote = $note;

@@ -6,6 +6,7 @@ use aminkt\userAccounting\components\TransactionEvent;
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RiskException;
 use aminkt\userAccounting\exceptions\RuntimeException;
+use aminkt\userAccounting\interfaces\AccountInterface;
 use aminkt\userAccounting\interfaces\PurseInterface;
 use aminkt\userAccounting\interfaces\TransactionInterface;
 use Yii;
@@ -93,6 +94,24 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
 
         \Yii::error($purse->getErrors(), self::class);
         throw new RuntimeException("Purse model creation become failed");
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function edit($name = null, $description = null)
+    {
+        if ($name)
+            $this->name = $name;
+
+        if ($description)
+            $this->description = $description;
+
+        if ($this->save())
+            return $this;
+
+        Yii::error($this->getErrors(), self::className());
+        throw new RuntimeException("Purse edit process become failed.");
     }
 
     /**
@@ -400,5 +419,74 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     public static function findByUserId($userId)
     {
         return static::findAll(['userId' => $userId, 'status' => self::STATUS_CONFIRMED]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAccount($account, $autoSettlement = true)
+    {
+        if ($account instanceof AccountInterface) {
+            $accountId = $account->getId();
+        } else {
+            $accountId = $account;
+        }
+
+        $this->accountId = $accountId;
+        if ($autoSettlement) {
+            $this->autoSettlement = 1;
+        } else {
+            $this->autoSettlement = 0;
+        }
+
+        if ($this->save()) {
+            return $this;
+        }
+
+        \Yii::error($this->getErrors(), self::className());
+        throw new RuntimeException("Can not assign account to current purse");
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeAccount()
+    {
+        $this->accountId = null;
+        $this->autoSettlement = 0;
+        if ($this->save()) {
+            return $this;
+        }
+
+        \Yii::error($this->getErrors(), self::className());
+        throw new RuntimeException("Can not remove account from current purse");
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function autoSettlementOn()
+    {
+        if ($this->autoSettlement == 1)
+            return true;
+
+        if ($this->accountId) {
+            $this->autoSettlement = 1;
+            $this->save(false);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function autoSettlementOff()
+    {
+        if ($this->autoSettlement == 0)
+            return;
+
+        $this->autoSettlement = 0;
+        $this->save(false);
     }
 }

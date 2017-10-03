@@ -434,9 +434,9 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
 
         $this->accountId = $accountId;
         if ($autoSettlement) {
-            $this->autoSettlement = 1;
+            $this->autoSettlement = self::AUTO_SETTLEMENT_ON;
         } else {
-            $this->autoSettlement = 0;
+            $this->autoSettlement = self::AUTO_SETTLEMENT_OFF;
         }
 
         if ($this->save()) {
@@ -453,7 +453,7 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     public function removeAccount()
     {
         $this->accountId = null;
-        $this->autoSettlement = 0;
+        $this->autoSettlement = self::AUTO_SETTLEMENT_OFF;
         if ($this->save()) {
             return $this;
         }
@@ -467,11 +467,11 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
      */
     public function autoSettlementOn()
     {
-        if ($this->autoSettlement == 1)
+        if ($this->autoSettlement == self::AUTO_SETTLEMENT_ON)
             return true;
 
         if ($this->accountId) {
-            $this->autoSettlement = 1;
+            $this->autoSettlement = self::AUTO_SETTLEMENT_ON;
             $this->save(false);
             return true;
         }
@@ -483,10 +483,10 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
      */
     public function autoSettlementOff()
     {
-        if ($this->autoSettlement == 0)
+        if ($this->autoSettlement == self::AUTO_SETTLEMENT_OFF)
             return;
 
-        $this->autoSettlement = 0;
+        $this->autoSettlement = self::AUTO_SETTLEMENT_OFF;
         $this->save(false);
     }
 }

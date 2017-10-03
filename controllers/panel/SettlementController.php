@@ -12,15 +12,13 @@ namespace aminkt\userAccounting\controllers\panel;
 use aminkt\userAccounting\models\Account;
 use aminkt\userAccounting\models\Purse;
 use aminkt\userAccounting\models\Settlement;
-use common\widgets\alert\Alert;
 use aminkt\userAccounting\models\SettlementRequestForm;
+use common\widgets\alert\Alert;
+use Yii;
 use yii\data\ActiveDataProvider;
-use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
-use Yii;
-use yii\web\NotAcceptableHttpException;
 
 class SettlementController extends Controller
 {
@@ -44,13 +42,16 @@ class SettlementController extends Controller
 
     /**
      * Create and list Settlement model.
+     *
+     * @param string $action
+     *
      * @return mixed
      */
     public function actionIndex($action = "list")
     {
         $settlementRequestForm = new SettlementRequestForm();
         $userId = \Yii::$app->getUser()->getIdentity()->getId();
-        $accounts = ArrayHelper::map(Account::findByUserId($userId), 'id', 'accountNumber');
+        $accounts = ArrayHelper::map(Account::findByUserId($userId), 'id', 'bankName');
         $purses = ArrayHelper::map(Purse::findByUserId($userId), 'id', 'name');
         $dataProvider = new ActiveDataProvider([
             'query' => Settlement::find()->where([

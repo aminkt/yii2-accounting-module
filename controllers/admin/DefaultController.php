@@ -1,7 +1,9 @@
 <?php
 
-namespace userAccounting\controllers\admin;
+namespace aminkt\userAccounting\controllers\admin;
 
+use aminkt\userAccounting\UserAccounting;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
@@ -34,6 +36,16 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $transactionModel = UserAccounting::getInstance()->transactionModel;
+        $dataProvider = new ActiveDataProvider([
+            'query' => $transactionModel::find()->where([
+                'YEAR(time)' => 'YEAR(NOW())',
+                'MONTH(time)' => 'MONTH(NOW())',
+                'DAY(time)' => 'DAY(NOW())'
+            ])
+        ]);
+        return $this->render('/default/index', [
+            'dataProvider' => $dataProvider
+        ]);
     }
 }

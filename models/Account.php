@@ -228,7 +228,7 @@ class Account extends ActiveRecord implements AccountInterface
 
     public function getId()
     {
-        return $this->getId();
+        return $this->id;
     }
 
     /**

@@ -66,7 +66,7 @@ class Account extends Component
         if (!$purse and $user) {
             if ($user instanceof IdentityInterface)
                 $user = $user->getId();
-            $purse = Purse::find()->where(['userId' => $user])->orderBy(['id' => SORT_ASC])->one();
+            $purse = UserAccounting::getDefaultPurse($user);
         }
         $transaction = UserAccounting::deposit($amount, $purse, $description);
         if ($transaction)

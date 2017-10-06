@@ -134,15 +134,15 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     {
         return [
             'id' => 'ID',
-            'userId' => 'User ID',
-            'accountId' => 'Account ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'operatorNote' => 'Operator Note',
-            'autoSettlement' => 'Auto Settlement',
-            'status' => 'Status',
-            'updateTime' => 'Update Time',
-            'createTime' => 'Create Time',
+            'userId' => 'شناسه کاربر',
+            'accountId' => 'حساب بانکی متصل',
+            'name' => 'نام',
+            'description' => 'توضیحات',
+            'operatorNote' => 'یاداشت اپراتور',
+            'autoSettlement' => 'تسویه خودکار',
+            'status' => 'وضعیت',
+            'updateTime' => 'تاریخ ویرایش',
+            'createTime' => 'تاریخ ایجاد',
         ];
     }
 

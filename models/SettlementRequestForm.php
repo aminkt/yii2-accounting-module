@@ -2,6 +2,7 @@
 
 namespace aminkt\userAccounting\models;
 
+use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use userAccounting\components\Account;
 use yii\base\Model;

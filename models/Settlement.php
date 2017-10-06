@@ -303,7 +303,7 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
         return [
             self::STATUS_WAITING => 'در انتظار تائید',
             self::STATUS_CONFIRMED => 'تائید شده',
-            self::STATUS_REJECTTED => 'عدم احراز صلاحیت',
+            self::STATUS_REJECTTED => 'رد درخواست',
             self::STATUS_BLOCKED => 'مسدود شده',
             self::STATUS_REMOVED => 'حذف شده'
         ];

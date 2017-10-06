@@ -11,11 +11,11 @@ namespace aminkt\userAccounting\controllers\admin;
 
 use aminkt\userAccounting\models\Settlement;
 use common\widgets\alert\Alert;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use Yii;
 
 class SettlementController extends Controller
 {
@@ -59,11 +59,27 @@ class SettlementController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $status = $model->status;
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-                Alert::success('حساب با موفقیت ویرایش شد.', ' ');
-            } else {
-                Alert::error('خطایی در ویرایش اطلاعات وجود دارد!', 'لطفا دوباره تلاش کنید.');
+            switch ($model->status) {
+                case $model::STATUS_CONFIRMED:
+                    if ($status != $model::STATUS_CONFIRMED) {
+                        $model->confirmSettlementRequest($model->bankTrackingCode, $model->operatorNote);
+                        Alert::success('در خواست با موفقیت تائید شد.', ' ');
+                    }
+                    break;
+                case $model::STATUS_REJECTTED:
+                    if ($status != $model::STATUS_REJECTTED) {
+                        $model->rejectSettlementRequest($model->operatorNote);
+                        Alert::success('در خواست با موفقیت تائید شد.', ' ');
+                    }
+                    break;
+                case $model::STATUS_BLOCKED:
+                    if ($status != $model::STATUS_BLOCKED) {
+                        $model->blockSettlementRequest($model->operatorNote);
+                        Alert::success('در خواست با موفقیت تائید شد.', ' ');
+                    }
+                    break;
             }
         }
         return $this->render('/admin/settlement/update', [

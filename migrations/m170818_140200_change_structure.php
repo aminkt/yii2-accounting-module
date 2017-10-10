@@ -7,6 +7,11 @@ class m170818_140200_change_structure extends Migration
 {
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB';
+        }
         if (false and !$this->confirm("Are you sure? All data will be remove and migrate down may not available.")) {
             $this->stdout('Operation cancelled' . PHP_EOL, Console::FG_RED);
             return false;
@@ -32,7 +37,7 @@ class m170818_140200_change_structure extends Migration
             'meta' => $this->string(64)->notNull(),
             'value' => $this->string(),
             'time' => $this->integer(20),
-        ]);
+        ], $tableOptions);
 
 
         // Create purse table
@@ -47,7 +52,7 @@ class m170818_140200_change_structure extends Migration
             'status' => $this->smallInteger(2),
             'updateTime' => $this->integer(20),
             'createTime' => $this->integer(20),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey(
             'fk-user_accounting_purses-accountId',

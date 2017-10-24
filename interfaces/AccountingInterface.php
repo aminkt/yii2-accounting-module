@@ -16,7 +16,7 @@ interface AccountingInterface extends UserAccountingInterface
      * Return a accounting model.
      *
      * @param string $meta
-     * @param integer|\yii\web\IdentityInterface $user
+     * @param integer|UserInterface $user
      * @return AccountingInterface
      */
     public static function get($meta, $user);
@@ -25,7 +25,7 @@ interface AccountingInterface extends UserAccountingInterface
      * Return key value.
      *
      * @param string $key
-     * @param integer|\yii\web\IdentityInterface $userIdentity
+     * @param integer|UserInterface $userIdentity
      *
      * @return string
      */
@@ -34,7 +34,7 @@ interface AccountingInterface extends UserAccountingInterface
     /**
      * Calculate and return user amount.
      *
-     * @param integer|\yii\web\IdentityInterface $userIdentity
+     * @param integer|UserInterface $userIdentity
      *
      * @return float
      */
@@ -122,7 +122,7 @@ interface AccountingInterface extends UserAccountingInterface
     /**
      * Create a new purse.
      *
-     * @param \yii\web\IdentityInterface $userIdentity Owner identity object.
+     * @param UserInterface $userIdentity Owner identity object.
      * @param string $name Name of purse
      * @param string|null $description
      *
@@ -172,7 +172,7 @@ interface AccountingInterface extends UserAccountingInterface
     /**
      * Create a bank account.
      *
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
+     * @param UserInterface $userIdentity $userIdentity Owner identity object.
      * @param string|null $bankName Account bank name.
      * @param string|null $owner Account owner name
      * @param string|null $cardNumber Account card number
@@ -226,7 +226,7 @@ interface AccountingInterface extends UserAccountingInterface
     /**
      * Return default purse object of selected user.
      *
-     * @param integer|\yii\web\IdentityInterface $user
+     * @param integer|UserInterface $user
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException When user not defined or not correct.
@@ -238,7 +238,7 @@ interface AccountingInterface extends UserAccountingInterface
     /**
      * Set default purse as defined purse for selected user.
      *
-     * @param integer|\yii\web\IdentityInterface $user
+     * @param integer|UserInterface $user
      * @param integer|PurseInterface $purse
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.

@@ -36,6 +36,15 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'columns' => [
+                    [
+                        'attribute' => 'user',
+                        'format' => 'raw',
+                        'label' => 'کابر',
+                        'value' => function ($model) {
+                            /** @var $model \aminkt\userAccounting\models\Account */
+                            return $model->user->getFullName() . ' (' . $model->user->getId() . ')<br>' . $model->user->getMobile();
+                        }
+                    ],
                     'bankName',
                     'cardNumber',
                     'accountNumber',

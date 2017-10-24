@@ -29,9 +29,28 @@ use yii\db\Query;
  * @property integer $createTime
  *
  * @property Account $account
+ * @property \aminkt\userAccounting\interfaces\UserInterface $user
  */
 class Purse extends \yii\db\ActiveRecord implements PurseInterface
 {
+    protected $user;
+
+    /**
+     * Return user model.
+     *
+     * @return \aminkt\userAccounting\interfaces\UserInterface
+     */
+    public function getUser()
+    {
+        if (!$this->user) {
+            /** @var \aminkt\userAccounting\interfaces\UserInterface $userModel */
+            $userModel = \aminkt\userAccounting\UserAccounting::getInstance()->userModel;
+            $this->user = $userModel::findOne($this->userId);
+        }
+
+        return $this->user;
+    }
+
     /**
      * @inheritdoc
      */
@@ -74,7 +93,7 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     /**
      * Create a new purse.
      *
-     * @param \yii\web\IdentityInterface $userIdentity Owner identity object.
+     * @param \aminkt\userAccounting\interfaces\UserInterface $userIdentity Owner identity object.
      * @param string $name Name of purse
      * @param string|null $description
      *

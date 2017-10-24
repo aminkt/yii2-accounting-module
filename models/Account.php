@@ -23,10 +23,13 @@ use yii\db\ActiveRecord;
  * @property integer $createTime
  *
  * @property Settlement[] $settlements
+ * @property \aminkt\userAccounting\interfaces\UserInterface $user
  */
 class Account extends ActiveRecord implements AccountInterface
 {
     const SCENARIO_UPDATE = 'update';
+
+    protected $user;
 
     /**
      * @inheritdoc
@@ -83,6 +86,22 @@ class Account extends ActiveRecord implements AccountInterface
             'updateTime' => 'Update Time',
             'createTime' => 'Create Time',
         ];
+    }
+
+    /**
+     * Return user model.
+     *
+     * @return \aminkt\userAccounting\interfaces\UserInterface
+     */
+    public function getUser()
+    {
+        if (!$this->user) {
+            /** @var \aminkt\userAccounting\interfaces\UserInterface $userModel */
+            $userModel = \aminkt\userAccounting\UserAccounting::getInstance()->userModel;
+            $this->user = $userModel::findOne($this->userId);
+        }
+
+        return $this->user;
     }
 
     /**

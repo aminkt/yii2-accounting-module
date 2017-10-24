@@ -32,9 +32,28 @@ use yii\db\ActiveRecord;
  * @property Account $account
  * @property Purse $purse
  * @property string $accountName
+ * @property \aminkt\userAccounting\interfaces\UserInterface $user
  */
 class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterface
 {
+    protected $user;
+
+    /**
+     * Return user model.
+     *
+     * @return \aminkt\userAccounting\interfaces\UserInterface
+     */
+    public function getUser()
+    {
+        if (!$this->user) {
+            /** @var \aminkt\userAccounting\interfaces\UserInterface $userModel */
+            $userModel = \aminkt\userAccounting\UserAccounting::getInstance()->userModel;
+            $this->user = $userModel::findOne($this->userId);
+        }
+
+        return $this->user;
+    }
+
     /**
      * @inheritdoc
      */

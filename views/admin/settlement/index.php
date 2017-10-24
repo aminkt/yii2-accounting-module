@@ -6,7 +6,7 @@
  * Time: 3:55 PM
  */
 
-use \aminkt\userAccounting\models\Settlement;
+use aminkt\userAccounting\models\Settlement;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
@@ -39,6 +39,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     [
+                        'attribute' => 'user',
+                        'format' => 'raw',
+                        'label' => 'کابر',
+                        'value' => function ($model) {
+                            /** @var $model \aminkt\userAccounting\models\Account */
+                            return $model->user->getFullName() . ' (' . $model->user->getId() . ')<br>' . $model->user->getMobile();
+                        }
+                    ],
+                    [
                         'attribute' => 'account',
                         'format' => 'raw',
                         'value' => function ($model) {
@@ -66,8 +75,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     'settlementTime:datetime',
                     'createTime:datetime',
                     'updateTime:datetime',
-                    'operatorNote:ntext',
-                    'description:ntext',
+                    [
+                        'attribute' => 'operatorNote',
+                        'format' => 'text',
+                        'value' => function ($model) {
+                            /* @var $model aminkt\userAccounting\models\Settlement */
+                            return \yii\helpers\StringHelper::truncate($model->operatorNote, 150);
+                        }
+                    ],
+                    [
+                        'attribute' => 'description',
+                        'format' => 'text',
+                        'value' => function ($model) {
+                            /* @var $model aminkt\userAccounting\models\Settlement */
+                            return \yii\helpers\StringHelper::truncate($model->description, 150);
+                        }
+                    ],
                     [
                         'format' => 'raw',
                         'value' => function ($model) {

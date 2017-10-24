@@ -28,7 +28,7 @@ interface AccountInterface extends UserAccountingInterface
     /**
      * Create a bank account.
      *
-     * @param \yii\web\IdentityInterface $userIdentity $userIdentity Owner identity object.
+     * @param UserInterface $userIdentity $userIdentity Owner identity object.
      * @param string|null $bankName Account bank name.
      * @param string|null $owner Account owner name
      * @param string|null $cardNumber Account card number

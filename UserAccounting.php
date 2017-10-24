@@ -35,6 +35,9 @@ class UserAccounting extends \yii\base\Module
     /** @var string|null $transactionModel Transaction model class name. */
     public $transactionModel = null;
 
+    /** @var string|null $userModel Transaction model class name. */
+    public $userModel = null;
+
     /** @var null|double Maximum amount that a settlement request should have. */
     public $maxSettlementAmount = null;
 
@@ -50,6 +53,8 @@ class UserAccounting extends \yii\base\Module
 
         if (!$this->transactionModel)
             throw new InvalidArgumentException("Transaction model not defined");
+        if (!$this->userModel)
+            throw new InvalidArgumentException("User model not defined");
 
         \Yii::configure($this, require( __DIR__.DIRECTORY_SEPARATOR.'config.php'));
     }

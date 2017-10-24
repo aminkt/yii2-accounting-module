@@ -12,8 +12,8 @@ namespace aminkt\userAccounting\interfaces;
 interface UserAccountingInterface
 {
     /**
-     * @param integer|\yii\web\IdentityInterface $fromUser
-     * @param integer|\yii\web\IdentityInterface $toUser
+     * @param integer|UserInterface $fromUser
+     * @param integer|UserInterface $toUser
      *
      * @throws \aminkt\userAccounting\exceptions\RiskException
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.

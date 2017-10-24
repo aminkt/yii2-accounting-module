@@ -9,7 +9,6 @@ use aminkt\userAccounting\interfaces\PurseInterface;
 use aminkt\userAccounting\interfaces\SettlementRequestInterface;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "{{%useraccounting}}".
@@ -273,7 +272,7 @@ class UserAccounting extends ActiveRecord implements AccountingInterface
     /**
      * Return default purse object of selected user.
      *
-     * @param integer|\yii\web\IdentityInterface $user
+     * @param integer|\aminkt\userAccounting\interfaces\UserInterface $user
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.
      * @throws \aminkt\userAccounting\exceptions\InvalidArgumentException When user not defined or not correct.
@@ -296,7 +295,7 @@ class UserAccounting extends ActiveRecord implements AccountingInterface
     /**
      * Set default purse as defined purse for selected user.
      *
-     * @param integer|\yii\web\IdentityInterface $user
+     * @param integer|\aminkt\userAccounting\interfaces\UserInterface $user
      * @param integer|PurseInterface $purse
      *
      * @throws \aminkt\userAccounting\exceptions\RuntimeException Throw if process stop unexpectedly.

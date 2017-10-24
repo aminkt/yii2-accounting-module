@@ -38,7 +38,7 @@ interface PurseInterface extends UserAccountingInterface
     /**
      * Create a new purse.
      *
-     * @param \yii\web\IdentityInterface $userIdentity Owner identity object.
+     * @param UserInterface $userIdentity Owner identity object.
      * @param string $name Name of purse
      * @param string|null $description
      *

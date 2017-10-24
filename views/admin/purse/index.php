@@ -36,7 +36,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     'name',
-                    'userId',
+                    [
+                        'attribute' => 'user',
+                        'format' => 'raw',
+                        'label' => 'کابر',
+                        'value' => function ($model) {
+                            /** @var $model \aminkt\userAccounting\models\Account */
+                            return $model->user->getFullName() . ' (' . $model->user->getId() . ')<br>' . $model->user->getMobile();
+                        }
+                    ],
                     [
                         'attribute' => 'accountId',
                         'format' => 'raw',

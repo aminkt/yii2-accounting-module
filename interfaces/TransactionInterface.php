@@ -61,7 +61,7 @@ interface TransactionInterface extends UserAccountingInterface
     /**
      * Return user object of transaction model.
      *
-     * @return \yii\web\IdentityInterface
+     * @return UserInterface
      */
     public function getUser();
 

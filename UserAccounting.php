@@ -33,7 +33,7 @@ class UserAccounting extends \yii\base\Module
     public $controllerNamespace = 'aminkt\userAccounting\controllers\panel';
 
     /** @var string|null $transactionModel Transaction model class name. */
-    public $transactionModel = null;
+    public $transactionModel = 'aminkt\userAccounting\models\Transaction';
 
     /** @var string|null $userModel Transaction model class name. */
     public $userModel = null;

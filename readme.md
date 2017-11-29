@@ -47,7 +47,9 @@ Step4: Implement `aminkt\userAccounting\interfaces\TransactionInterface` into yo
 
 Step5: Implement `aminkt\userAccounting\interfaces\UserInterface` into your User model.
 
-> NOTE: Because every application need itself `Transaction` and `User` model implementation so we don't create that in this module. 
+> NOTE: Because every application need itself `User` model implementation so we don't create that in this module. 
+>
+> But we created a common `Transaction` model. if you want use it just ignore step 4 and remove `transactionModel` part in module config.
 
 ---
 **Database Migrations**

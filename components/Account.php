@@ -3,7 +3,6 @@ namespace aminkt\userAccounting\components;
 
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\models\Purse;
-use aminkt\userAccounting\models\Transaction;
 use aminkt\userAccounting\models\UserAccounting;
 use yii\base\Component;
 use yii\helpers\ArrayHelper;
@@ -24,8 +23,10 @@ class Account extends Component
      *
      * @return float
      */
-    public static function getBalance($user)
+    public static function getBalance($user = null)
     {
+        if (!$user)
+            $user = \Yii::$app->getUser()->getId();
         try {
             $amount = UserAccounting::getAmount($user);
         } catch (RuntimeException $e) {

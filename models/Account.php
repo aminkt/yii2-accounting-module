@@ -2,6 +2,7 @@
 
 namespace aminkt\userAccounting\models;
 
+use aminkt\normalizer\Validation;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\interfaces\AccountInterface;
 use yii\behaviors\TimestampBehavior;
@@ -63,8 +64,42 @@ class Account extends ActiveRecord implements AccountInterface
             [['userId', 'status', 'bankName', 'shaba'], 'required'],
             [['userId', 'status', 'updateTime', 'createTime'], 'integer'],
             [['operatorNote'], 'string'],
+            [['cardNumber'], 'validateCardNumber'],
+            [['shaba'], 'validateIBAN'],
             [['bankName', 'cardNumber', 'accountNumber', 'shaba', 'owner'], 'string', 'max' => 255],
         ];
+    }
+
+    /**
+     * Validate IBAN.
+     *
+     * @param $attribute
+     * @param $params
+     * @param $validator
+     *
+     */
+    public function validateIBAN($attribute, $params, $validator)
+    {
+        if ($iban = Validation::validateIBAN($this->$attribute)) {
+            $this->shaba = $iban;
+        } else {
+            $this->addError($attribute, 'شماره شبا وارد شده معتبر نیست.');
+        }
+    }
+
+    /**
+     * Validate Credit card number.
+     * @param $attribute
+     * @param $params
+     * @param $validator
+     */
+    public function validateCardNumber($attribute, $params, $validator)
+    {
+        if ($card = Validation::validateCreditCard($this->$attribute)) {
+            $this->cardNumber = $card;
+        } else {
+            $this->addError($attribute, 'شماره کارت وارد شده معتبر نیست.');
+        }
     }
 
     /**

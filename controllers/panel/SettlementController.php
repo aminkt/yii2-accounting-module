@@ -13,7 +13,7 @@ use aminkt\userAccounting\models\Account;
 use aminkt\userAccounting\models\Purse;
 use aminkt\userAccounting\models\Settlement;
 use aminkt\userAccounting\models\SettlementRequestForm;
-use common\widgets\alert\Alert;
+use aminkt\widgets\alert\Alert;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;

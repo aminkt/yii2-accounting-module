@@ -172,9 +172,9 @@ class UserAccounting extends ActiveRecord implements AccountingInterface
     /**
      * @inheritdoc
      */
-    public static function createPurse($userIdentity, $name, $description = null)
+    public static function createPurse($user, $name, $description = null)
     {
-        $purse = Purse::createPurse($userIdentity, $name, $description);
+        $purse = Purse::createPurse($user, $name, $description);
         return $purse;
     }
 

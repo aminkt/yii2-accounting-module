@@ -93,7 +93,7 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
     /**
      * Create a new purse.
      *
-     * @param \aminkt\userAccounting\interfaces\UserInterface $userIdentity Owner identity object.
+     * @param integer|\aminkt\userAccounting\interfaces\UserInterface $user Owner identity object or id.
      * @param string $name Name of purse
      * @param string|null $description
      *
@@ -101,10 +101,12 @@ class Purse extends \yii\db\ActiveRecord implements PurseInterface
      *
      * @return PurseInterface
      */
-    public static function createPurse($userIdentity, $name, $description = null)
+    public static function createPurse($user, $name, $description = null)
     {
+        $userId = is_integer($user) ? $user : $user->getId();
+
         $purse = new Purse();
-        $purse->userId = $userIdentity->getId();
+        $purse->userId = $userId;
         $purse->name = $name;
         $purse->description = $description;
         $purse->status = self::STATUS_CONFIRMED;

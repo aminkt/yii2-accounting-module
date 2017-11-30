@@ -122,7 +122,7 @@ interface AccountingInterface extends UserAccountingInterface
     /**
      * Create a new purse.
      *
-     * @param UserInterface $userIdentity Owner identity object.
+     * @param integer|UserInterface $user Owner identity object or id.
      * @param string $name Name of purse
      * @param string|null $description
      *
@@ -130,7 +130,7 @@ interface AccountingInterface extends UserAccountingInterface
      *
      * @return PurseInterface
      */
-    public static function createPurse($userIdentity, $name, $description = null);
+    public static function createPurse($user, $name, $description = null);
 
     /**
      * Block a purse.

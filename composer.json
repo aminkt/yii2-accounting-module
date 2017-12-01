@@ -13,7 +13,8 @@
     	}
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.11"
+      "yiisoft/yii2": "~2.0.11",
+      "aminkt/yii2-alert-widget": "dev-master"
     },
     "autoload": {
     	"psr-4": {

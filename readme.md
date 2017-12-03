@@ -60,6 +60,12 @@ Before usage this extension, we'll also need to prepare the database.
 php yii migrate --migrationPath=@vendor/aminkt/yii2-userAccounting-module/migrations
 ```
 
+
+> NOTE: If you want use default `Transaction` table run below command to migrate it up.
+> ```
+> php yii migrate --migrationPath=@vendor/aminkt/yii2-userAccounting-module/migrations/manual-migrations
+> ```
+
 ---
 Structure of tables and classes:
 ---

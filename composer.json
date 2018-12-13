@@ -1,10 +1,10 @@
 {
-    "name": "aminkt/yii2-userAccounting-module",
+    "name": "aminkt/yii2-accounting-module",
     "description": "User accounting module for  yii2",
     "keywords": ["yii", "accounting", "module", "user", "user accounting"],
     "type": "yii2-extension",
     "support": {
-    	"source": "https://gitlab.com/aminkt/yii2-userAccounting-module"
+    	"source": "https://github.com/aminkt/yii2-accounting-module"
     },
     "authors": [
     	{

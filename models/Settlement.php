@@ -176,6 +176,9 @@ class Settlement extends \yii\db\ActiveRecord implements SettlementRequestInterf
         if ($max and $amount > $max)
             throw new InvalidArgumentException("Amount is so huge.");
 
+        if ($purse->getAmount() < $amount)
+            throw new InvalidArgumentException("Purse has not enough balance.");
+
         $accountId = is_integer($account) ? $account : $account->getId();
 
         $settlement = new Settlement();

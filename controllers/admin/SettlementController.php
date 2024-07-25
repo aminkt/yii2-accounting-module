@@ -10,7 +10,7 @@ namespace aminkt\userAccounting\controllers\admin;
 
 
 use aminkt\userAccounting\models\Settlement;
-use common\widgets\alert\Alert;
+use aminkt\widgets\alert\Alert;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;

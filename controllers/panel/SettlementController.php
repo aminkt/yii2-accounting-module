@@ -64,7 +64,7 @@ class SettlementController extends Controller
             if ($account && $purse && $account->userId == $userId && $purse->userId == $userId) {
                 $settlementRequestForm->account = $account->id;
                 $settlementRequestForm->purse = $purse->id;
-                if ($settlementRequestForm->regPayRequest()) {
+                if ($settlementRequestForm->settlement()) {
                     $action = "list";
                     Alert::success('درخواست تسویه حساب برای شما با موفقیت ثبت شد', 'درخواست تسویه حساب برای شما منتظر تائید است.');
                 } else {

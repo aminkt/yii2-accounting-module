@@ -4,7 +4,7 @@ namespace aminkt\userAccounting\models;
 
 use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
-use userAccounting\components\Account;
+use aminkt\widgets\alert\Alert;
 use yii\base\Model;
 
 /**
@@ -63,10 +63,13 @@ class SettlementRequestForm extends Model
                 $purse = Purse::findOne($this->purse);
                 if(!$purse)
                     throw new InvalidArgumentException("Purse not found.");
-                $settlement = UserAccounting::settlementRequest(floatval($this->amount), $purse, $this->account, $this->description, $this->type);
+                $account = Account::findOne($this->account);
+                $settlement = UserAccounting::settlementRequest(floatval($this->amount), $purse, $account, $this->description, $this->type);
                 return true;
             } catch (RuntimeException $exception) {
                 return false;
+            } catch (InvalidArgumentException $exception) {
+                Alert::error("خطا در ایجاد درخواست تسویه", "کیف پول انتخابی، موجودی کافی ندارد.");
             }
         }
         return false;

@@ -13,7 +13,7 @@ use aminkt\userAccounting\exceptions\InvalidArgumentException;
 use aminkt\userAccounting\exceptions\RuntimeException;
 use aminkt\userAccounting\models\Purse;
 use aminkt\userAccounting\models\Settlement;
-use common\widgets\alert\Alert;
+use aminkt\widgets\alert\Alert;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
